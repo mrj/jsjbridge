@@ -3,8 +3,8 @@
 
   "name": "JavaScript-Java Bridge",
   "short_name": "JSJBridge",
-  "version": "1.0",
-  "description": "A replacement for the Java Plugin so Java Applets without graphics continue to work on browsers that no longer support NPAPI plugins. Allows a webpage to start a Java application, emulating Java's LiveConnect API to pass data and method calls back and forth, including Java manipulation of the DOM.",
+  "version": "1.1",
+  "description": "A replacement for the Java Plugin so Java Applets without graphics continue to work on browsers that no longer support NPAPI plugins. Java's LiveConnect API is emulated — data & method calls can be exchanged, and Java can manipulate the webpage DOM.",
 
   "icons": {
     "48": "jsjbridge-icon.svg",

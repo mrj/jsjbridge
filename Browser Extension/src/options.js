@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       buyLink.href = price > 0 ? paymentURL(price, chargeGST && 10) : '';
     }
     
-    licensedVersionBox.value = licensedVersion = storedValues.licensedVersion;
+    licensedVersionBox.value = licensedVersion = storedValues.licensedVersion || 0;
     document.getElementById(storedValues.licensed ? 'licensedUsage' : 'freeUsage').checked = true;
     setLicensedState();
     document.getElementById('currentVersion').innerHTML = currentVersion;
