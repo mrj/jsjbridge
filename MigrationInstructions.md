@@ -21,17 +21,17 @@
 6. The [LiveConnect JSObject API](https://www.oracle.com/webfolder/technetwork/java/plugin2/liveconnect/jsobject-javadoc/index.html) should be able to be used unchanged, though a `JSObject.UNDEFINED` object is now returned when JavaScript returns `undefined`. Also, Java arrays are now passed to JavaScript by value rather than reference. This greatly speeds sending a large amount of data from Java to JavaScript, since there was previously a call to Java for each array access. But it also means that array changes are not automatically propagated back to Java.
 
 
-## Browser-Side (Firefox &ge; 58 required)
+## Browser-Side (Firefox &ge; 58, Chrome &ge; 63 required)
 
 1. By default, the JSJBridge browser extension is inactive at all URLs. Go to the JSJBridge extension Preference page in the Extension Manager to set one or more URL prefixes at which the extension becomes active.
 
 2. The `applet`/`object` HTML tags for your Applets can stay the same. JavaScript objects which represent your Applets must obtained via `document.getElementById` calls. It should also be OK when the actual `getElementById` calls are being made through a JavaScript library.
 
-3. For each Java program (each of which can host more than one `Applet`/`WebpageHelper` class) you then need to create a [Native Messaging manifest file](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests#Native_messaging_manifests).
+3. For each Java program (each of which can host more than one `Applet`/`WebpageHelper` class) you then need to create a Native Messaging manifest file ([Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests#Native_messaging_manifests), [Chrome](https://developers.chrome.com/apps/nativeMessaging#native-messaging-host)).
 
    The `name` field in each manifest file (and the basename of the `.json` manifest filename) must be the same as the Applet `archive` parameter, with the `.jar` suffix removed, and the JSJBridge extension must be given permission to use it. You will need to create and point manifests to a script that runs your WebpageHelper JAR files via `java -jar myHelper.jar`.
 
-   e.g.
+   e.g., for Firefox
 
    ```json
    {
@@ -50,7 +50,7 @@
    exec java -jar myHelper.jar 2>> /path/to/myJavaProgram.log
    ```
 
-   Then put or link your manifest files in the [correct location for your OS](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests#Manifest_location).
+   Then put or link your manifest files in the correct location for your OS ([Firefox](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_manifests#Manifest_location), [Chrome](https://developers.chrome.com/apps/nativeMessaging#native-messaging-host-location)).
 
 4. You can have as many active Applets as you like in and across tabs, and each program can have more than one `WebpageHelper` class, but only one instance of each Java program runs at any one time, meaning that there can only be one active Applet for each combination of program name and `WebpageHelper` class. 
 
