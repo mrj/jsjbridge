@@ -179,7 +179,7 @@ var name = await v0.name;
 var l = name.length;
 ```
   
-or, if the Promises are directly handled using, `then`:
+or, if the Promises are directly handled using `then`:
 
 ```javascript
 var l = await helper.javaVector.get(0).then(v0 => v0.name).then(name => name.length);
