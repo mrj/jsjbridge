@@ -1,0 +1,87 @@
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                  | The DevWheels Licence, Version 1 |
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A. USE OF THIS WORK
+   ================
+   
+1. You are permitted to use this work to
+   (a) Evaluate whether you wish to use the work for your intended use, or
+   (b) To develop or internally test (not for its intended use) either the work itself or a collection of works of which this work is a part.
+   
+2. Before you can use, or let others use, a copy you have obtained of a particular version of this work, in a way other than that described in Term 1, you must determine whether you must pay a licence fee to use this version of the work for a certain period, and, if so, pay that fee. Both may be achieved in at least one of four ways:
+   (a) By using a licensing mechanism built in to the work itself,
+   (b) By consulting either a file in your copy named "sources.txt", or a "Sources" Section, at the top of which will be a specification for the work that contains a "Licensing Conditions" field, at the top of which is a link to licensing software,
+   (c) By consulting the same "Licensing Conditions" information as described in (b), matching your attributes, intended use, and desired licensing period to one of the described "use-cases" to derive a licence fee, subtracting the cumulative fees you have paid to license previous versions of the work for the same period (or, if not known, subtracting the fee specified in the "sources.txt" file or Sources Section of the version of the package from which you have upgraded), then using the "Payment Information" field to pay any positive net fee, or
+   (d) By concluding an agreement with the copyright holders of the work for a particular licence fee and period.
+   
+3. If your reasonable attempts at making the required payment by any of the above methods are unsuccessful, you may use the work for seven days without charge, during which time you should make other attempts to pay, and make attempts inform the licensor of your payment failure using the "Licensing Contact" field. If payment has been unsuccessful after seven days, you should attempt to purchase licences from each of the direct-source works of the work you wish to use. The specifications of these direct-source packages will be indented four spaces in the "sources.txt" file or "Sources" Section. Again, follow the procedure given in this licence term to make your payment (any fee listed as NET applies), moving to more deeply-indented packages if unsuccessful until either all branches of the source tree of the package you wish to use have been licensed, or the packages you are unable to license have no deeper packages.
+
+B. UNCHANGED REDISTRIBUTION
+   ========================
+
+You are permitted to redistribute an unchanged and unaugmented copy of what you have received.
+
+
+C. INITIAL DISTRIBUTION OF MATERIAL UNDER THIS LICENCE
+   ===================================================
+
+If you choose to distribute a package of material under this licence, where none of that material at the time at which that material was last sourced was licensed under a version of this licence, you must add to the distribution a "sources.txt" file or "Sources" Section that uses the following format, without any white space at the beginnings of lines:
+
+PACKAGE <short-unique-package-name>
+Name: <full-package-name>
+Version: <version-id>
+Location: <package-location>
+Licensing Conditions: <list-of-licensing-use-cases-and-associated-fees>
+Licensing Conditions Last Change Version:  <version-id>
+Payment Information: <payment-information>
+Licensing Contact: <licensing-contact-information>
+
+The unique name of the package should not contain a white-space character and be unlikely to be used by another package. A way to achieve this is to make the unique name be an internet domain that you control, followed by a dot character and a short package name unique to your organisation or to your knowledge.
+
+The package-unique version number or version ID should imply a standard ordering from earlier to later versions.
+
+The package location will normally be a link to a document at which the package is described, and/or can be downloaded, cloned, or merged.
+
+The licensing conditions are a list of one or more use-cases, covering all potential users, which can vary according to the attributes of the licensee, the intended use of the package by the licensee, and the licence period (perpetual if omitted). A use-case cannot include an always-free use described in Term A1 of this licence. 
+
+Append to the description of each use-case a licensing fee (which can be zero), in one or more currencies. If no use-case is described, the licensing fee applies to all use-cases. A minimum list of licensing conditions is therefore just a single fee for a perpetual licence. The licensing fees you specify must be sufficient for their associated use-cases. There can be no unstated licensing fees such as patent licensing. 
+
+Above this list of use-cases and licence fees you can include a link to software that helps end-users determine their use-cases and licensing fees. This must however be an addition rather than a replacement for the licensing conditions text.
+
+The "Licensing Conditions Last Change Version" field specifies the version ID of this package branch for which the licensing conditions last changed.
+
+A field that provides instructions for paying the required licence fees for licensing this version follows, the text of which must describe any surcharges or discounts for different payment methods.
+
+The package specification is completed by a contact information line that allows potential users and developers to (1), notify you of their licensing payments, (2), initiate negotiations on altered licence conditions and fees, and (3), inform you about package exclusions (see below). This field also allows potential contributors to initiate negotiations on integrating work into your package, perhaps in return for a share of your licence revenue.
+
+Package specifications can be written in a language other than English, however the English names of the specification fields must still be present at the start of lines, with comma-separated translations appended in brackets: For example, "Location (Standort, Indawo): ..."
+
+
+D. REDISTRIBUTION IN A NEW FORM
+   ============================
+  
+You may redistribute a modified or re-packaged version of material that has been released under this licence (with or without compatible extra conditions), under the following conditions:
+
+1. The package of material that you distribute must also be licensed under this, or a later version, of this licence (with or without extra licence conditions that do not conflict with this licence), unless the copyright holders of the material have agreed for you to release the material under a different licence.
+  
+2. You do not make any substantive change to existing copyright notices.
+ 
+3. The package you release contains a "sources.txt" file, or "Sources" Section, of the following form:
+  
+  At the top of the document is the specification of the package to be released, as described in Part C of this licence, followed by a blank line. Following this is a four-space-indented and blank-line-separated concatenation of the "sources.txt" files or "Sources" sections of all works under a version of this licence on which the new work has directly drawn (the "direct-sources"), in the form that each document existed when material from that work was last drawn from. A field of a package specification in the resulting document can be changed by agreement with the copyright holders of that package.
+  
+  Each uniquely-named package specification in the concatenated document should appear at most once with its unique name prefixed with "PACKAGE" rather than "DUP PACKAGE". If this is not the case after the concatenation operation:
+  (a) A "DUP" prefix should be added to all package specifications of the same unique name, with the exception of one with the highest naturally-ordered version ID,
+  (b) If a "DUP" prefix is added to a specification of the package for which this "sources.txt" is being compiled, all package specifications below this self-duplicate should be removed from the file, and 
+  (c) The specifications of direct-source packages for which a "DUP" prefix has been added to a package specification that originated from that source must be altered by
+    (i) Adding, if not already present, a "Net Excluded" field (above "Licensing Conditions"), to which the unique names of the packages to which the "DUP" prefix has been added should be added to a space-separated list, and  
+    (ii) Each licence fee in the "License Conditions" field is altered to first replace the fee with "&lt;original-fee&gt; (NET &lt;original-fee&gt;)" if the bracketed net pricing is not present, then, for each currency in this fee, and for each package to which a "DUP" has been added, subtracting from the net fee the equivalent net fee from the same or super-set use-case of that package,
+  
+4. Within 40 days of receiving a licence fee for a particular version of your redistributed package, you pay, as specified in the associated "Payment Information" fields, either
+   (i) For initial purchases of a package licence: The net fees as listed for the licensee's use-case in the "Licensing Conditions" fields of each direct-source package specification in the "sources.txt" file or "Sources" Section of the package version that has been licensed. 
+   (ii) For the purchase of an upgrade from a previously-licensed version: The difference between the net fees as described in (i) for the newly-licensed version and those given for the the previously-licensed version, as long as this difference is positive.
+     
+  If you do not have enough information to determine a licensee's use-case as described by the specification of a direct-source, you will request this information from the licensee. If an attempt to pay a direct-source is unsuccessful, you will hold that amount in trust until payment is successful, making regular attempts to both pay what is owning and to contact the source to inform them of your payment failure.
+  
+5. If 60 days after receiving a licence fee you are unable to make the required payment to a source, you will instead pay any direct-sources of this source the required licence fees as specified in Point 4, retaining in trust any remaining fee, and again applying this Point 5 if a payment is unsuccessful. 
