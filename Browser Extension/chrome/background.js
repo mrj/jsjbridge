@@ -7,6 +7,8 @@
   Handle arbitrarily many Applets in pages and across tabs by routing messages
   from webpages via the "programName" message field, and routing messages
   from Java programs via the (content script) "portId" message field.
+
+  Also allow native messages longer than the 1MiB limit by reconstructing fragments.
 */
 
 const VERSION_LAST_CHARGABLE = 1.0;
@@ -79,9 +81,20 @@ chrome.storage.local.get(['licensed', 'licensedVersion', 'lastLicenceCheckTimeMS
             if (!csPortsForNative.includes(portToContentScript)) csPortsForNative.push(portToContentScript);
           } else {
             portToNative = nativePortsByProgramName[programName] = chrome.runtime.connectNative(programName);
+            portToNative.assembledMessage = '';
             contentScriptPortsByNativePort.set(portToNative, [portToContentScript]);
             portToNative.onDisconnect.addListener(nativeDisconnect);
             portToNative.onMessage.addListener(messageFromNative => {
+              var messageFragment = messageFromNative.c || messageFromNative.e;
+              if (messageFragment) {
+                portToNative.assembledMessage += messageFragment;
+                if (messageFromNative.e) {
+                  messageFromNative = JSON.parse(portToNative.assembledMessage);
+                  portToNative.assembledMessage = '';
+                } else {
+                  return;
+                }
+              }
               messageFromNative.programName = programName;
               var portId = messageFromNative.portId;
               if (portId) {

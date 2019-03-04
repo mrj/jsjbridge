@@ -121,8 +121,16 @@ public class JSObject {
 	private JSObject() {}
 	private JSObject(int pid, int wid) { portId = pid; uid = wid; }
 	
-	private static final long	REQUEST_TIMEOUT_S = 60L,
-								MAXIMUM_MESSAGE_LENGTH_BYTES = 1024 * 1024;
+	private static final int	REQUEST_TIMEOUT_S = 60,
+								MAXIMUM_MESSAGE_LENGTH_BYTES = 1024 * 1024,
+								MESSAGE_FRAGMENT_OVERHEAD_BYTES = 8,  // {"c":"<MSG>"}
+								MESSAGE_FRAGMENT_SUFFIX_BYTES = 2,
+								MAXIMUM_ENCODED_MESSAGE_LENGTH_BYTES = MAXIMUM_MESSAGE_LENGTH_BYTES - MESSAGE_FRAGMENT_OVERHEAD_BYTES,
+								MESSAGE_FRAGMENT_PREFIX_BYTES = MESSAGE_FRAGMENT_OVERHEAD_BYTES - MESSAGE_FRAGMENT_SUFFIX_BYTES;
+
+	private static final byte[]	MESSAGE_CONTINUES_PREFIX	= new byte[]{'{','"', 'c', '"', ':', '"'},
+								MESSAGE_FRAGMENT_END_PREFIX	= new byte[]{'{','"', 'e', '"', ':', '"'},
+								MESSAGE_FRAGMENT_SUFFIX		= new byte[]{'"','}'};
 
 	private static HashMap<Object, Integer> contextsByObject;
 	private static ArrayList<Object> contextsByUID;
@@ -303,25 +311,54 @@ public class JSObject {
 			return o;
 		}
 	}
-	
+
 	private static void messageWebpage(JSONObject messageJson) {
 		final String message = messageJson.toString();
-		
-		// TODO: Avoid the message length limit by splitting strings and arrays over multiple messages
-		//
-		if (message.length() > MAXIMUM_MESSAGE_LENGTH_BYTES)
-			throw new JSException(message.length() + " byte message dropped; exceeds the " + MAXIMUM_MESSAGE_LENGTH_BYTES + " byte limit");
+		byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
 
-		final byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
 		synchronized (messageSender) {
-			WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY, "SENDING MESSAGE: " + message + "\n");
-			messageSender.write(sendingMessageLengthBuffer.putInt(messageBytes.length).array(), 0, 4);
-			messageSender.write(messageBytes, 0, messageBytes.length);
-			messageSender.flush();
-			sendingMessageLengthBuffer.rewind();
+			boolean doLog = WebpageHelper.hlog.getLevel().intValue() <= NativeMessagingLogLevel.STDERR_ONLY.intValue();
+			if (doLog) WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY, "SENDING MESSAGE: " + message + "\n");
+			if (messageBytes.length <= MAXIMUM_MESSAGE_LENGTH_BYTES) {
+				sendMessage(messageBytes, 0, messageBytes.length);
+			} else {
+				String messageAsJSONString = "XXXXX" + JSONObject.quote(message) + "X";
+				messageBytes = messageAsJSONString.getBytes(StandardCharsets.UTF_8);
+				int nextFragmentOffset, messageLength = messageBytes.length - MESSAGE_FRAGMENT_OVERHEAD_BYTES;
+				for (int offset = 0; offset < messageLength; offset = nextFragmentOffset) {
+					nextFragmentOffset = Math.min(offset + MAXIMUM_ENCODED_MESSAGE_LENGTH_BYTES, messageLength);
+					int	nextFragmentStart = nextFragmentOffset + MESSAGE_FRAGMENT_PREFIX_BYTES;
+
+					if (messageBytes[nextFragmentStart-1] == '\\' && messageBytes[nextFragmentStart-2] != '\\') {
+						nextFragmentOffset--;
+						nextFragmentStart--;
+					}
+
+					boolean continues = nextFragmentOffset < messageLength;
+					byte[] save = new byte[2], prefix = continues ? MESSAGE_CONTINUES_PREFIX : MESSAGE_FRAGMENT_END_PREFIX;
+					int fragmentLength = nextFragmentStart - offset + MESSAGE_FRAGMENT_SUFFIX_BYTES;
+
+					System.arraycopy(prefix, 0, messageBytes, offset, MESSAGE_FRAGMENT_PREFIX_BYTES);
+					if (continues) System.arraycopy(messageBytes, nextFragmentStart, save, 0, MESSAGE_FRAGMENT_SUFFIX_BYTES);
+					System.arraycopy(MESSAGE_FRAGMENT_SUFFIX, 0, messageBytes, nextFragmentStart, MESSAGE_FRAGMENT_SUFFIX_BYTES);
+					if (doLog) { // Avoid unnecessary String construction
+						String fragment = new String(messageBytes, offset, fragmentLength, StandardCharsets.UTF_8);
+						WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY, "SENDING FRAGMENT: " + fragment + "\n");
+					}
+					sendMessage(messageBytes, offset, fragmentLength);
+					if (continues) System.arraycopy(save, 0, messageBytes, nextFragmentStart, MESSAGE_FRAGMENT_SUFFIX_BYTES);
+				}
+			}
 		}
 	}
 	
+	private static void sendMessage(byte[] messageBytes, int offset, int length) {
+		messageSender.write(sendingMessageLengthBuffer.putInt(length).array(), 0, 4);
+		messageSender.write(messageBytes, offset, length);
+		messageSender.flush();
+		sendingMessageLengthBuffer.rewind();
+	}
+
 	private static class ReceiveMessagesFromWebpage implements Runnable {
 		private final List<String> JAVASCRIPT_TO_JAVA_REQUESTS = Arrays.asList("newApplet", "start", "stop", "invoke", "get", "set");
 		
