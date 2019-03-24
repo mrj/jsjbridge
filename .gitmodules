@@ -1,0 +1,9 @@
+[submodule "Java/JSON-java"]
+	path = Java/JSON-java
+	url = https://github.com/stleary/JSON-java.git
+[submodule "Java/native-lib-loader"]
+	path = Java/native-lib-loader
+	url = https://github.com/scijava/native-lib-loader
+[submodule "Java/sprd-webp"]
+	path = Java/sprd-webp
+	url = https://github.com/spreadshirt/sprd-webp.git

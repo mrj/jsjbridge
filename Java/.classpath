@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="json.jar"/>
+	<classpathentry excluding="org/json/.gitignore|org/json/CDL.java|org/json/Cookie.java|org/json/CookieList.java|org/json/HTTP.java|org/json/HTTPTokener.java|org/json/JSONML.java|org/json/JSONStringer.java|org/json/LICENSE|org/json/Property.java|org/json/README.md|org/json/XML.java|org/json/XMLParserConfiguration.java|org/json/XMLTokener.java" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="sprd-webp/src/main/libwebp.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

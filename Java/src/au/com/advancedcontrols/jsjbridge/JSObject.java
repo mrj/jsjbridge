@@ -21,8 +21,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
-import org.json.JSONObject;
+
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class JSObject {
 
@@ -31,15 +32,15 @@ public class JSObject {
 	public static final JSObject UNDEFINED = new JSObject();
 	
 	public static JSObject getWindow(WebpageHelper helper) throws JSException {
-		return (JSObject)helper.jsObject.sendRequest("getWindow", null, null);
+		return (JSObject)helper.jsObject.sendRequest("getWindow", null);
 	}
 
 	public Object getMember(String name) throws JSException {
-		return sendRequest("getMember", name, null);
+		return sendRequest("getMember", name);
 	}
 	
 	public Object removeMember(String name) throws JSException {
-		return sendRequest("removeMember", name, null);
+		return sendRequest("removeMember", name);
 	}
 
 	public Object setMember(String name, Object value) throws JSException {
@@ -47,7 +48,7 @@ public class JSObject {
 	}
 	
 	public Object getSlot(int index) throws JSException {
-		return sendRequest("getSlot", index, null);
+		return sendRequest("getSlot", index);
 	}
 
 	public Object setSlot(int index, Object value) throws JSException {
@@ -75,6 +76,9 @@ public class JSObject {
 	public String toString() {	return uid == null ? "undefined" : (uid + "@" + portId);	}
 	
 	// Package can access
+	
+	int portId; // The content script port number associated with the browser tab/frame for this JavaScript object
+	Integer uid = null;	// The unique object ID within this tab/frame
 	
 	static void init()  {
 		if (initialized) destroy();
@@ -108,16 +112,22 @@ public class JSObject {
 		} catch (Exception e) {}
 	}
 	
+	Object sendRequest(String type, Object name, Object value) throws JSException {
+		return doSendRequest(this, type, name, value);
+	}
+
+	Object sendRequest(String type, Object name) throws JSException {
+		return sendRequest(type, name, null);
+	}
+	
+	// Package & WebpageHelpers can access
+	
 	protected static Object log(String msg, JSObject target) {
 		return doSendRequest(target, "log", null, msg);
 	}
-	
 
 	// Private
 
-	private int portId; // The content script port number associated with the browser tab/frame for this JavaScript object
-	private Integer uid = null;	// The unique object ID within this tab/frame
-	
 	private JSObject() {}
 	private JSObject(int pid, int wid) { portId = pid; uid = wid; }
 	
@@ -131,6 +141,7 @@ public class JSObject {
 	private static final byte[]	MESSAGE_CONTINUES_PREFIX	= new byte[]{'{','"', 'c', '"', ':', '"'},
 								MESSAGE_FRAGMENT_END_PREFIX	= new byte[]{'{','"', 'e', '"', ':', '"'},
 								MESSAGE_FRAGMENT_SUFFIX		= new byte[]{'"','}'};
+	static byte[] fragmentSuffixSave = new byte[2];
 
 	private static HashMap<Object, Integer> contextsByObject;
 	private static ArrayList<Object> contextsByUID;
@@ -152,11 +163,14 @@ public class JSObject {
 								REQUEST_NUMBER_JSON_KEY = "RequestNumber",
 								APPLET_JSON_KEY = "appletClass",
 								PARAMETERS_JSON_KEY = "parameters",
+								APPLET_WIDTH_JSON_KEY = "width",
+								APPLET_HEIGHT_JSON_KEY = "height",
 								URL_JSON_KEY = "url",
 								NAME_JSON_KEY = "name",
 								VALUE_JSON_KEY = "value",
 								TYPE_JSON_KEY = "type",
 								JAVA_UID_JSON_KEY = "javaUID",
+								CANVAS_UID_JSON_KEY = "canvasUID",
 								JS_WINDOW_UID_JSON_KEY = "jsUID",
 								CONTENT_SCRIPT_PORTID_JSON_KEY = "portId";
 	
@@ -215,10 +229,6 @@ public class JSObject {
 		return null;
 	}
 	
-	private Object sendRequest(String type, Object name, Object value) throws JSException {
-		return doSendRequest(this, type, name, value);
-	}
-
 	private static Object getJsonValue(Object value) throws NoSuchMethodException, SecurityException {
 		WebpageHelper.hlog.finer("value = " + (value==null ? "null" : value) + " class = " + (value == null ? "null" : value.getClass().getTypeName()));
 		if (value instanceof Float) {
@@ -317,7 +327,7 @@ public class JSObject {
 		byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
 
 		synchronized (messageSender) {
-			boolean doLog = WebpageHelper.hlog.getLevel().intValue() <= NativeMessagingLogLevel.STDERR_ONLY.intValue();
+			boolean doLog = WebpageHelper.hlog.getLevel().intValue() <= NativeMessagingLogLevel.STDERR_ONLY.intValue(); // Avoid unnecessary String construction
 			if (doLog) WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY, "SENDING MESSAGE: " + message + "\n");
 			if (messageBytes.length <= MAXIMUM_MESSAGE_LENGTH_BYTES) {
 				sendMessage(messageBytes, 0, messageBytes.length);
@@ -335,18 +345,18 @@ public class JSObject {
 					}
 
 					boolean continues = nextFragmentOffset < messageLength;
-					byte[] save = new byte[2], prefix = continues ? MESSAGE_CONTINUES_PREFIX : MESSAGE_FRAGMENT_END_PREFIX;
+					byte[] prefix = continues ? MESSAGE_CONTINUES_PREFIX : MESSAGE_FRAGMENT_END_PREFIX;
 					int fragmentLength = nextFragmentStart - offset + MESSAGE_FRAGMENT_SUFFIX_BYTES;
 
 					System.arraycopy(prefix, 0, messageBytes, offset, MESSAGE_FRAGMENT_PREFIX_BYTES);
-					if (continues) System.arraycopy(messageBytes, nextFragmentStart, save, 0, MESSAGE_FRAGMENT_SUFFIX_BYTES);
+					if (continues) System.arraycopy(messageBytes, nextFragmentStart, fragmentSuffixSave, 0, MESSAGE_FRAGMENT_SUFFIX_BYTES);
 					System.arraycopy(MESSAGE_FRAGMENT_SUFFIX, 0, messageBytes, nextFragmentStart, MESSAGE_FRAGMENT_SUFFIX_BYTES);
-					if (doLog) { // Avoid unnecessary String construction
+					if (doLog) {
 						String fragment = new String(messageBytes, offset, fragmentLength, StandardCharsets.UTF_8);
 						WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY, "SENDING FRAGMENT: " + fragment + "\n");
 					}
 					sendMessage(messageBytes, offset, fragmentLength);
-					if (continues) System.arraycopy(save, 0, messageBytes, nextFragmentStart, MESSAGE_FRAGMENT_SUFFIX_BYTES);
+					if (continues) System.arraycopy(fragmentSuffixSave, 0, messageBytes, nextFragmentStart, MESSAGE_FRAGMENT_SUFFIX_BYTES);
 				}
 			}
 		}
@@ -421,6 +431,12 @@ public class JSObject {
 									JSONObject value = (JSONObject) getJsonValue(newHelper);
 									receivedMessage.put(VALUE_JSON_KEY, value);
 									newHelper.jsObject = new JSObject(portId, value.getInt(JAVA_UID_JSON_KEY));
+									Object canvasUID = receivedMessage.remove(CANVAS_UID_JSON_KEY);
+									if (canvasUID != null) {
+										newHelper.canvasJsObject = new JSObject(portId, (int)canvasUID);
+										newHelper.setSize(	Integer.parseInt((String)receivedMessage.remove(APPLET_WIDTH_JSON_KEY)),
+															Integer.parseInt((String)receivedMessage.remove(APPLET_HEIGHT_JSON_KEY)));
+									}
 									newHelperParameters = (JSONObject)receivedMessage.remove(PARAMETERS_JSON_KEY);
 									newHelperHref = (String)receivedMessage.remove(URL_JSON_KEY);
 								} else {

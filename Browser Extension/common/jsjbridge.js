@@ -8,6 +8,7 @@
   var appletsById = {},
       javaObjectsByProgramNameAndUID = {},
       fieldAndMethodNamesByJavaClassId = {},
+      cachedImages = {},
       jsObjectsByUID = [],
       jsObjectsByObject = new Map(),
       nextRequestNumber = 1,
@@ -154,6 +155,16 @@
     }
   }
   
+  function getJsUID(object) {
+      var jsUID = jsObjectsByObject.get(object);
+      if (!jsUID) {
+        jsUID = jsObjectsByUID.length;
+        jsObjectsByUID.push(object);
+        jsObjectsByObject.set(object, jsUID);
+      }
+      return jsUID
+  }
+  
   function castToJava(value) {
     if (Array.isArray(value)) {
       if (value.length) {
@@ -169,13 +180,7 @@
       if (value instanceof String) {
         value = value.valueOf();
       } else {
-        var jsUID = jsObjectsByObject.get(value);
-        if (!jsUID) {
-          jsUID = jsObjectsByUID.length;
-          jsObjectsByUID.push(value);
-          jsObjectsByObject.set(value, jsUID);
-        }
-        value = {jsUID: jsUID};
+        value = {jsUID: getJsUID(value)};
       }
     } else if (value === undefined) {
       value = {JSundefined: true};
@@ -220,6 +225,44 @@
   function messageContentScript(programName, message) {
     message.programName = programName;
     window.postMessage({to: 'jsjbridge', message: message}, '*');
+  }
+  
+  function string2webp(webpImageStr) {
+    function utf8to7bits(codePoint) {
+      // Mapping 7 bits to single-byte UTF8 characters when JSON-encoded: 00-38 => 23-5B, 39-5A => 5D-7E, 5B-78 => C2-DF, 79-7F => E1-E7
+      return codePoint < 0x5C ? codePoint-0x23 : codePoint < 0x7F ? codePoint-0x24 : codePoint < 0xE0 ? codePoint-0x67 : codePoint-0x68;
+    }
+    
+    var webpByteSize = Math.floor(webpImageStr.length * 7/8);
+    var numBlocks = Math.floor(webpImageStr.length / 8);
+    var remainder = webpImageStr.length % 8;
+    var webpBuffer = new ArrayBuffer(webpByteSize);
+    var webpBytes = new Uint8Array(webpBuffer);
+    var nextChar = 0, nextByte = 0;
+    
+    function decodeBlock(endShift, highBitsIndex) {
+        var highBits = utf8to7bits(webpImageStr.codePointAt(highBitsIndex));
+        for (var shift=1; shift<endShift; shift++) webpBytes[nextByte++] = utf8to7bits(webpImageStr.codePointAt(nextChar++)) + ((highBits<<shift)&0x80);
+    }
+    
+    for (var block=0; block<numBlocks; block++, nextChar++) decodeBlock(8, nextChar+7);
+    if (remainder > 0) decodeBlock(remainder, webpImageStr.length-1);
+    
+    /*
+    appletsById.rpfcontrol.getImgArray().then(ibytes => {
+      if (ibytes.length != webpByteSize) {
+        console.log('Size differsL Java = ' + ibytes.length + ', JS = ' + webpByteSize);
+      } else {
+        for (var i=0; i<webpByteSize; i++) if ((ibytes[i]&0xFF) != webpBytes[i]) {
+          console.log('Diff at pos ' + i + ': Java = 0x' + (ibytes[i]&0xFF).toString(16) + ', JS = 0x' + webpBytes[i].toString(16));
+          break;
+        }
+      }
+    });
+    */
+    
+    var webpBlob = new Blob([webpBuffer], {type: 'image/webp'});
+    return createImageBitmap(webpBlob);
   }
   
   window.addEventListener('message', event => {
@@ -308,6 +351,36 @@
             window.dispatchEvent(new CustomEvent(REPLY_EVENT_PREFIX+message.requestNumber, {detail: message}));
             break;
             
+          case 'renderGraphicsQueue':
+            let queue = message.name, imageRenderingPromises = [];
+            delete message.name;
+
+            queue.forEach(([command, hash, webpImageStr]) => {
+              if (command == 'image' && webpImageStr) imageRenderingPromises.push(string2webp(webpImageStr).then(webpImage => cachedImages[hash] = webpImage));
+            });
+
+           returnValue = Promise.all(imageRenderingPromises).then(() => {
+              let graphicsContext = context().getContext('2d');
+              queue.forEach(([name, ...values]) => {
+                if (name == 'assign') {
+                  for (var i=0; i<values.length; i+=2) graphicsContext[values[i]] = castFromJava(programName, values[i+1]);
+                } else if (name == 'image') {
+                  graphicsContext.drawImage(cachedImages[values[0]], 0, 0);
+                } else {
+                  graphicsContext[name].apply(graphicsContext, castFromJava(programName, values));
+                }
+              });
+              return true;
+            });
+
+            break;
+
+          case 'canvasQuery':
+            //console.log("canvasQuery: name = " + message.name + " values = " + message.value);
+            var graphicsContext = context().getContext('2d');
+            returnValue = graphicsContext[message.name].apply(graphicsContext, castFromJava(programName, message.value));
+            break;
+
           default:
             needsReply = false;
             log(programName, `sent unknown message "${message.type}"`);
@@ -358,7 +431,19 @@
         var appletClass = parameters.code && parameters.code.replace(/\.class$/, '');
         if (appletClass) {
           applet = appletsById[appletEl.id] = JavaObject.get(programName, null, appletClass, appletEl);
-          applet._messageContentScript({type: 'newApplet', appletClass: appletClass, parameters: parameters, url: location.href});
+          var canvasUID = null;
+          if (appletEl.width && appletEl.height) {
+            var canvas = document.createElement('canvas');
+            canvas.height = appletEl.height;
+            canvas.width = appletEl.width;
+            canvasUID = getJsUID(canvas);
+            appletEl.appendChild(canvas);
+            //appletEl.style.position = 'relative';
+            canvas.style.position = 'absolute';
+            canvas.style.top = canvas.style.left = 0;
+          }          
+          applet._messageContentScript({type: 'newApplet', appletClass: appletClass, parameters: parameters,
+            url: location.href, width: appletEl.width, height: appletEl.height, canvasUID: canvasUID});
         } else {
           log(appletEl.id, '"code" parameter (Applet class) is not set');
         }
