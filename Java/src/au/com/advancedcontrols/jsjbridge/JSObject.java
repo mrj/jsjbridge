@@ -59,6 +59,10 @@ public class JSObject {
 		return sendRequest("eval", null, javaScriptCode);
 	}
 	
+	public Object call(String methodName) throws JSException {
+		return sendRequest("call", methodName);
+	}
+	
 	public Object call(String methodName, Object[] args) throws JSException {
 		return sendRequest("call", methodName, args);
 	}
@@ -163,14 +167,14 @@ public class JSObject {
 								REQUEST_NUMBER_JSON_KEY = "RequestNumber",
 								APPLET_JSON_KEY = "appletClass",
 								PARAMETERS_JSON_KEY = "parameters",
-								APPLET_WIDTH_JSON_KEY = "width",
-								APPLET_HEIGHT_JSON_KEY = "height",
+								//APPLET_WIDTH_JSON_KEY = "width",
+								//APPLET_HEIGHT_JSON_KEY = "height",
 								URL_JSON_KEY = "url",
 								NAME_JSON_KEY = "name",
 								VALUE_JSON_KEY = "value",
 								TYPE_JSON_KEY = "type",
 								JAVA_UID_JSON_KEY = "javaUID",
-								CANVAS_UID_JSON_KEY = "canvasUID",
+								//CANVAS_UID_JSON_KEY = "canvasUID",
 								JS_WINDOW_UID_JSON_KEY = "jsUID",
 								CONTENT_SCRIPT_PORTID_JSON_KEY = "portId";
 	
@@ -431,12 +435,14 @@ public class JSObject {
 									JSONObject value = (JSONObject) getJsonValue(newHelper);
 									receivedMessage.put(VALUE_JSON_KEY, value);
 									newHelper.jsObject = new JSObject(portId, value.getInt(JAVA_UID_JSON_KEY));
+								/*
 									Object canvasUID = receivedMessage.remove(CANVAS_UID_JSON_KEY);
 									if (canvasUID != null) {
 										newHelper.canvasJsObject = new JSObject(portId, (int)canvasUID);
 										newHelper.setSize(	Integer.parseInt((String)receivedMessage.remove(APPLET_WIDTH_JSON_KEY)),
 															Integer.parseInt((String)receivedMessage.remove(APPLET_HEIGHT_JSON_KEY)));
 									}
+								*/
 									newHelperParameters = (JSONObject)receivedMessage.remove(PARAMETERS_JSON_KEY);
 									newHelperHref = (String)receivedMessage.remove(URL_JSON_KEY);
 								} else {

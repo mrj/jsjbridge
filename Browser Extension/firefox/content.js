@@ -18,8 +18,8 @@ browser.storage.local.get('allowedURLPrefixes').then(storedValues => {
            if (!portToBackground) {
              portToBackground = browser.runtime.connect();
              portToBackground.onDisconnect.addListener(() => messageWebpage({type: 'backgroundDisconnect'}));
-              portToBackground.onMessage.addListener(message => messageWebpage(message));
-           }        
+             portToBackground.onMessage.addListener(message => messageWebpage(message));
+           }
            portToBackground.postMessage(msgFromWebpage.message);
         }
       });

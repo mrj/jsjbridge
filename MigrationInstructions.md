@@ -17,6 +17,8 @@
   ```html
   <param name="logLevel" value="FINE" />
   ```
+  
+  The default log level is "INFO".
 
 6. The [LiveConnect JSObject API](https://www.oracle.com/webfolder/technetwork/java/plugin2/liveconnect/jsobject-javadoc/index.html) should be able to be used unchanged, though a `JSObject.UNDEFINED` object is now returned when JavaScript returns `undefined`. Also, Java arrays are now passed to JavaScript by value rather than reference. This greatly speeds sending a large amount of data from Java to JavaScript, since there was previously a call to Java for each array access. But it also means that array changes are not automatically propagated back to Java.
 
@@ -136,7 +138,7 @@
    or (b) Instead of using `await`, you can put dependent code in a `then` block, which can be done at the JavaScript top-level:
 
   ```javascript
-  helper.showSize(javaVector).then(size => console.log('Vector size is ' + size));
+  helper.javaVector.size().then(size => console.log('Vector size is ' + size));
   ```
 
   You can also put `await` in front of a Java field access expression. e.g.

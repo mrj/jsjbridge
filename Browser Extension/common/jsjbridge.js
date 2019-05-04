@@ -79,7 +79,11 @@
       ));
     },
     
-    javaAccessProxy(type, name, value) { return new Proxy(this._messageJava(type, name, value), JavaAccessProxyHandlers); }
+    javaAccessProxy(type, name, value) { return new Proxy(this._messageJava(type, name, value), JavaAccessProxyHandlers); },
+    
+    addEventListener(type, listener, options) { return this._isApplet() ? this._appletEl.addEventListener(type, listener, options) : null },
+    removeEventListener(type, listener, options) { return this._isApplet() ? this._appletEl.removeEventListener(type, listener, options) : null },
+    dispatchEvent(event) { return this._isApplet() ? this._appletEl.dispatchEvent(event) : null }
   };
   
   var JavaObjectProxyHandlers = {
@@ -166,7 +170,7 @@
   }
   
   function castToJava(value) {
-    if (Array.isArray(value)) {
+    if (value != null && typeof value[Symbol.iterator] === 'function') {
       if (value.length) {
         var castArray = new Array(value.length);
         for (var i=value.length-1; i>=0; i--) castArray[i] = castToJava(value[i]);
@@ -247,20 +251,6 @@
     
     for (var block=0; block<numBlocks; block++, nextChar++) decodeBlock(8, nextChar+7);
     if (remainder > 0) decodeBlock(remainder, webpImageStr.length-1);
-    
-    /*
-    appletsById.rpfcontrol.getImgArray().then(ibytes => {
-      if (ibytes.length != webpByteSize) {
-        console.log('Size differsL Java = ' + ibytes.length + ', JS = ' + webpByteSize);
-      } else {
-        for (var i=0; i<webpByteSize; i++) if ((ibytes[i]&0xFF) != webpBytes[i]) {
-          console.log('Diff at pos ' + i + ': Java = 0x' + (ibytes[i]&0xFF).toString(16) + ', JS = 0x' + webpBytes[i].toString(16));
-          break;
-        }
-      }
-    });
-    */
-    
     var webpBlob = new Blob([webpBuffer], {type: 'image/webp'});
     return createImageBitmap(webpBlob);
   }
@@ -360,7 +350,7 @@
             });
 
            returnValue = Promise.all(imageRenderingPromises).then(() => {
-              let graphicsContext = context().getContext('2d');
+              var graphicsContext = context().getContext('2d');
               queue.forEach(([name, ...values]) => {
                 if (name == 'assign') {
                   for (var i=0; i<values.length; i+=2) graphicsContext[values[i]] = castFromJava(programName, values[i+1]);
@@ -376,7 +366,6 @@
             break;
 
           case 'canvasQuery':
-            //console.log("canvasQuery: name = " + message.name + " values = " + message.value);
             var graphicsContext = context().getContext('2d');
             returnValue = graphicsContext[message.name].apply(graphicsContext, castFromJava(programName, message.value));
             break;
@@ -426,24 +415,26 @@
     if (!applet) {
       var parameters = {};
       appletEl.querySelectorAll('param').forEach(param => parameters[param.name] = param.value);
-      var programName = parameters.archive && parameters.archive.replace(/\.jar$/, '');
+      var programName = appletEl.getAttribute('archive') || parameters.archive;
       if (programName) {
-        var appletClass = parameters.code && parameters.code.replace(/\.class$/, '');
+        programName = programName.replace(/\.jar$/, '');
+        var appletClass = appletEl.getAttribute('code') || parameters.code;
         if (appletClass) {
+          appletClass = appletClass.replace(/\.class$/, '').replace(/\//, '.');
           applet = appletsById[appletEl.id] = JavaObject.get(programName, null, appletClass, appletEl);
           var canvasUID = null;
-          if (appletEl.width && appletEl.height) {
+          var width = appletEl.getAttribute('width'), height =  appletEl.getAttribute('height');
+          if (false && width && height) { // Graphics disabled for now
             var canvas = document.createElement('canvas');
-            canvas.height = appletEl.height;
-            canvas.width = appletEl.width;
+            canvas.height = height;
+            canvas.width = width;
             canvasUID = getJsUID(canvas);
             appletEl.appendChild(canvas);
-            //appletEl.style.position = 'relative';
             canvas.style.position = 'absolute';
             canvas.style.top = canvas.style.left = 0;
-          }          
+          }
           applet._messageContentScript({type: 'newApplet', appletClass: appletClass, parameters: parameters,
-            url: location.href, width: appletEl.width, height: appletEl.height, canvasUID: canvasUID});
+            url: location.href, width: width, height: height, canvasUID: canvasUID});
         } else {
           log(appletEl.id, '"code" parameter (Applet class) is not set');
         }
@@ -463,13 +454,12 @@
            ? getAppletProxy(el) : el;
   };
   
-  document.addEventListener('DOMContentLoaded', () =>
-    document.querySelectorAll('applet, object[type="application/x-java-applet"]').forEach( appletEl => {
-      if (appletEl.id) {
-        getAppletProxy(appletEl);
-      } else {
-        throw("The id attribute isn't set on Applet element " + appletEl);
-      }
-    })
-  );
+  function activateApplets() {
+    document.querySelectorAll('applet, object[type="application/x-java-applet"]').forEach(getAppletProxy);
+  }
+  
+  if (document.readyState == 'loading')
+    document.addEventListener('DOMContentLoaded', activateApplets);
+  else
+    activateApplets();
 })();

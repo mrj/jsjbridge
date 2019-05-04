@@ -40,9 +40,32 @@
             <td>2019-03-01</td>
             <td>20</td>
             <td><a href="releases/1.1/jsjbridge-1.1.jar">jsjbridge-1.1.jar</a></td>
-            <td><a href="releases/1.1/javascript_java_bridge-1.1-fx.xpi">javascript_java_bridge-1.1-fx.xpi</a></td>
-            <td></td>
+            <td><a href="releases/1.1/javascript_java_bridge-1.1-fx.xpi">Firefox extension</a></td>
+            <td><a href="releases/1.1/beglnkgbajkhcmmdkldmgbkggoeegabe_main.crx">Chrome extension</a></td>
             <td>Initial release</td>
+          </tr>
+         <tr>
+            <td>1.2</td>
+            <td>2019-05-04</td>
+            <td>20</td>
+            <td><a href="releases/1.2/jsjbridge-1.2.jar">jsjbridge-1.2.jar</a></td>
+            <td><a href="releases/1.2/javascript_java_bridge-1.2-fx.xpi">Firefox extension</a></td>
+            <td><a href="releases/1.2/beglnkgbajkhcmmdkldmgbkggoeegabe_main.crx">Chrome extension</a></td>
+            <td>
+              <ul>
+                <li>
+                  Use JSON fragment joining to allow messages from Java programs longer than the 1MiB browser limit.
+                </li>
+                <li>
+                  Make all iterable JavaScript objects become Java arrays, rather than just standard JavaScript arrays.
+                  This allows both typed arrays (Int8Array, etc,) and DOM collections to be seen by Java as arrays rather than JSObjects.
+                <li>
+                <li>
+                  Make initialization of Applet JavaScript variables easier and more reliable by looking at document.readyState, and
+                  by implementing the EventTarget interface on JavaObject proxies, allowing direct attachment of event listeners rather
+                  than through their _appletEl fields.
+                </li>
+            </td>
           </tr>
         </tbody>
 
