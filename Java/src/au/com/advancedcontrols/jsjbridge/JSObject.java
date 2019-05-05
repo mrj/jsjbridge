@@ -174,6 +174,7 @@ public class JSObject {
 								VALUE_JSON_KEY = "value",
 								TYPE_JSON_KEY = "type",
 								JAVA_UID_JSON_KEY = "javaUID",
+								JS_ITERABLE_JSON_KEY = "iterableClass",
 								//CANVAS_UID_JSON_KEY = "canvasUID",
 								JS_WINDOW_UID_JSON_KEY = "jsUID",
 								CONTENT_SCRIPT_PORTID_JSON_KEY = "portId";
@@ -234,7 +235,7 @@ public class JSObject {
 	}
 	
 	private static Object getJsonValue(Object value) throws NoSuchMethodException, SecurityException {
-		WebpageHelper.hlog.finer("value = " + (value==null ? "null" : value) + " class = " + (value == null ? "null" : value.getClass().getTypeName()));
+		WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY, "value = " + (value==null ? "null" : value) + " class = " + (value == null ? "null" : value.getClass().getTypeName()));
 		if (value instanceof Float) {
 			Float fvalue = (Float)value;
 		    return	Float.isNaN(fvalue) ? NAN_JSON :
@@ -267,7 +268,7 @@ public class JSObject {
 				javaUID = contextsByObject.get(value);
 				if (javaUID == null) {
 					javaUID = contextsByUID.size();
-					WebpageHelper.hlog.finer("New Java object " + javaUID + " class " + value.getClass().toString());
+					WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY, "New Java object " + javaUID + " class " + value.getClass().toString());
 					contextsByObject.put(value, javaUID);
 					contextsByUID.add(value);
 				}
@@ -308,6 +309,45 @@ public class JSObject {
 			JSONObject jo = (JSONObject)o;
 			if (jo.has(JAVA_UID_JSON_KEY)) {
 				synchronized (contextsByObject) { return contextsByUID.get(jo.getInt(JAVA_UID_JSON_KEY)); }
+			} else if (jo.has(JS_ITERABLE_JSON_KEY)) {
+				JSONArray jarray = (JSONArray)jo.get(VALUE_JSON_KEY);
+				int length = jarray.length();
+				//
+				// Is there any efficient way to avoid this duplication?
+				//
+				switch ((String)jo.get(JS_ITERABLE_JSON_KEY)) {
+					case "Int8Array":
+					case "Uint8Array":
+					case "Uint8ClampedArray":
+						byte[] byteArray = new byte[length];
+						for (int i=length-1; i>=0; i--) byteArray[i] = (byte)jarray.getInt(i);
+						return byteArray;
+					case "Int16Array":
+					case "Uint16Array":
+						short[] shortArray = new short[length];
+						for (int i=length-1; i>=0; i--) shortArray[i] = (short)jarray.getInt(i);
+						return shortArray;
+					case "Int32Array":
+					case "Uint32Array":
+						int[] intArray = new int[length];
+						for (int i=length-1; i>=0; i--) intArray[i] = jarray.getInt(i);
+						return intArray;
+					case "BigInt64Array":
+					case "BigUint64Array":
+						long[] longArray = new long[length];
+						for (int i=length-1; i>=0; i--) longArray[i] = jarray.getLong(i);
+						return longArray;
+					case "Float32Array":
+						float[] floatArray = new float[length];
+						for (int i=length-1; i>=0; i--) floatArray[i] = (float)jarray.getDouble(i);
+						return floatArray;						
+					case "Float64Array":
+						double[] doubleArray = new double[length];
+						for (int i=length-1; i>=0; i--) doubleArray[i] = jarray.getDouble(i);
+						return doubleArray;									
+					
+					default: return jSONValueToJava(jarray, portId);
+				}
 			} else {
 				return	jo.has(UNDEFINED_JSON_KEY) ? UNDEFINED :
 						jo.has(NAN_JSON_KEY) ? Double.NaN :
@@ -523,12 +563,12 @@ public class JSObject {
 									if (exception != null) {
 										setException(receivedMessage, errorMsg(exception, invocation), context, null);
 									} else {
+										WebpageHelper.hlog.finer("Invoking " + invocation);
 										final Method chosenMethod = method;
 										new Thread(() -> {
 											String exceptionMsg = null;
 											Exception exceptionObj = null;
 											try {
-												WebpageHelper.hlog.finer("Invoking " + invocation);
 												receivedMessage.put(VALUE_JSON_KEY, getJsonValue(chosenMethod.invoke(context, args)));
 											} catch (InvocationTargetException e) {
 												exceptionMsg = "Exception calling method"; exceptionObj = e;

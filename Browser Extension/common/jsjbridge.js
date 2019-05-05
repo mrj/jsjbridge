@@ -174,7 +174,7 @@
       if (value.length) {
         var castArray = new Array(value.length);
         for (var i=value.length-1; i>=0; i--) castArray[i] = castToJava(value[i]);
-        value = castArray;
+        value = value.constructor.name != 'Array' ? {iterableClass: value.constructor.name, value: castArray} : castArray;
       }
     } else if (value instanceof JavaObject) {
       value = {javaUID: value._uid};

@@ -13,8 +13,10 @@
       th:nth-child(3) { cursor: help; }
       tbody tr:nth-child(2n-1) { background: #ffefaf; }
       tbody tr:nth-child(2n) { background: #ccc; }
-      td { text-align: center; }
+      td { vertical-align: top; text-align: center; }
+      td:nth-child(2) { white-space: nowrap; }
       th:last-child, td:last-child { text-align: left; }
+      ul { margin-top:0; }
     </style>
   </head>
 
@@ -39,18 +41,18 @@
             <td>1.1</td>
             <td>2019-03-01</td>
             <td>20</td>
-            <td><a href="releases/1.1/jsjbridge-1.1.jar">jsjbridge-1.1.jar</a></td>
-            <td><a href="releases/1.1/javascript_java_bridge-1.1-fx.xpi">Firefox extension</a></td>
-            <td><a href="releases/1.1/beglnkgbajkhcmmdkldmgbkggoeegabe_main.crx">Chrome extension</a></td>
-            <td>Initial release</td>
+            <td><a href="jars/jsjbridge-1.1.jar">Download</a></td>
+            <td><a href="firefox/javascript_java_bridge-1.1-fx.xpi">Download</a></td>
+            <td><a href="chrome/jsjbridge-1.1-chrome.zip">Download</a></td>
+            <td><ul><li>Initial release</li></ul></td>
           </tr>
-         <tr>
-            <td>1.2</td>
-            <td>2019-05-04</td>
+          <tr>
+            <td>1.3</td>
+            <td>2019-05-05</td>
             <td>20</td>
-            <td><a href="releases/1.2/jsjbridge-1.2.jar">jsjbridge-1.2.jar</a></td>
-            <td><a href="releases/1.2/javascript_java_bridge-1.2-fx.xpi">Firefox extension</a></td>
-            <td><a href="releases/1.2/beglnkgbajkhcmmdkldmgbkggoeegabe_main.crx">Chrome extension</a></td>
+            <td><a href="jars/jsjbridge-1.3.jar">Download</a></td>
+            <td><a href="firefox/javascript_java_bridge-1.3-fx.xpi">Download</a></td>
+            <td><a href="chrome/jsjbridge-1.3-chrome.zip">Download</a></td>
             <td>
               <ul>
                 <li>
@@ -58,8 +60,8 @@
                 </li>
                 <li>
                   Make all iterable JavaScript objects become Java arrays, rather than just standard JavaScript arrays.
-                  This allows both typed arrays (Int8Array, etc,) and DOM collections to be seen by Java as arrays rather than JSObjects.
-                <li>
+                  This allows both typed arrays (Int8Array, etc.) and DOM collections to be seen by Java as arrays rather than JSObjects. Rather than becoming Object arrays, JavaScript typed array become Java primitive number arrays of the natural byte, short, int, long, float, or double size (signed or unsigned, so Java 8+ unsigned methods must be used to get the correct values for unsigned typed arrays).
+                </li>
                 <li>
                   Make initialization of Applet JavaScript variables easier and more reliable by looking at document.readyState, and
                   by implementing the EventTarget interface on JavaObject proxies, allowing direct attachment of event listeners rather

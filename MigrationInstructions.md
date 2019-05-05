@@ -188,3 +188,5 @@ var l = await helper.javaVector.get(0).then(v0 => v0.name).then(name => name.len
 ```
 ---
 
+5. JavaScript iterable objects except [typed arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays) become Java `Object` arrays. Typed arrays become Java primitive arrays of the natural `byte`, `short`, `int`, `long`, `float`, or `double` types. Unsigned typed arrays become the size-equivalent Java signed type, so Java 8+ unsigned methods must be used to get their correct values.
+
