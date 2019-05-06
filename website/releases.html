@@ -47,7 +47,7 @@
             <td><ul><li>Initial release</li></ul></td>
           </tr>
           <tr>
-            <td>1.4</td>
+            <td>1.5</td>
             <td>2019-05-06</td>
             <td>20</td>
             <td><a href="jars/jsjbridge-1.4.jar">Download</a></td>
@@ -67,6 +67,9 @@
                   by implementing the EventTarget interface on JavaObject proxies, allowing direct attachment of event listeners rather
                   than through their _appletEl fields.
                 </li>
+                <li>
+                  Call Applet destroy() methods on window beforeunload events, allowing things like flushing of preferences if the window is refreshed, closed, or navigated.
+                </li>               
             </td>
           </tr>
         </tbody>

@@ -414,7 +414,7 @@ public class JSObject {
 	}
 
 	private static class ReceiveMessagesFromWebpage implements Runnable {
-		private final List<String> JAVASCRIPT_TO_JAVA_REQUESTS = Arrays.asList("newApplet", "start", "stop", "invoke", "get", "set");
+		private final List<String> JAVASCRIPT_TO_JAVA_REQUESTS = Arrays.asList("newApplet", "start", "stop", "destroy", "invoke", "get", "set");
 		
 		private void setException(JSONObject message, String error, Object context, Throwable e) {
 			if (context instanceof WebpageHelper) {
@@ -516,6 +516,15 @@ public class JSObject {
 										helper.nlog.log(Level.SEVERE, "Exception stopping " + helper.className, e);
 									}
 								}, "Stopping " + helper.className).start();
+							} else if (messageType.equals("destroy")) {
+								final WebpageHelper helper = ((WebpageHelper)context);
+								new Thread(() -> {
+									try {
+										helper._destroy();
+									} catch (Exception e) {
+										helper.nlog.log(Level.SEVERE, "Exception destroying " + helper.className, e);
+									}
+								}, "Destroying " + helper.className).start();
 							} else {
 								final String name = receivedMessage.getString(NAME_JSON_KEY);
 								final Object messageValue = receivedMessage.get(VALUE_JSON_KEY);

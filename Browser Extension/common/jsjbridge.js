@@ -409,6 +409,7 @@
 
   window.addEventListener('blur',  () => invokeoOnApplets('stop'));
   window.addEventListener('focus', () => invokeoOnApplets('start'));
+  window.addEventListener('beforeunload', () => invokeoOnApplets('destroy'));
  
   function getAppletProxy(appletEl) {
     var applet = appletsById[appletEl.id];

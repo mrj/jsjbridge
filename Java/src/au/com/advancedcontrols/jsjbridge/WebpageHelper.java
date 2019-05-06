@@ -25,7 +25,6 @@ public class WebpageHelper {
 	public void start() {}
 	public void stop() {}
 	public void destroy() {}
-	public void finalize() throws Throwable { _stop(); destroy(); }
 	public String[][] getParameterInfo() { return null; }
 	public String getParameter(String name) { return parameters.has(name) ? parameters.getString(name) : null; }
 	public boolean isActive() {	return active; }
@@ -62,9 +61,10 @@ public class WebpageHelper {
 		_start();
 	}
 
-	void _start() { active = true; start(); }
-	void _stop()  { active = false; stop(); }
-	
+	void _start()	{ active = true; start(); }
+	void _stop()	{ active = false; stop(); }
+	void _destroy() { _stop(); destroy(); }
+
 	static WebpageHelper getInstanceForClassName(String className) { return instancesByClassName.get(className); }
 	
 	// Private
