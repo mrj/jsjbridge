@@ -170,7 +170,7 @@
   }
   
   function castToJava(value) {
-    if (value != null && typeof value[Symbol.iterator] === 'function') {
+    if (value != null && typeof value !== 'string' && typeof value[Symbol.iterator] === 'function') {
       if (value.length) {
         var castArray = new Array(value.length);
         for (var i=value.length-1; i>=0; i--) castArray[i] = castToJava(value[i]);
