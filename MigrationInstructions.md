@@ -2,7 +2,7 @@
 
 ## Java-Side (Java &ge; 8 required)
 
-1. Put both [jsjbridge.jar](Java/dist/jsjbridge.jar) and [json.jar](/stleary/JSON-java) in your buildpath and classpath in place of plugin.jar.
+1. Put both [jsjbridge.jar](Java/dist/jsjbridge.jar) and [json.jar](https://github.com/stleary/JSON-java) in your buildpath and classpath in place of plugin.jar.
 
 1. Change imports of `netscape.javascript.*` to `au.com.advancedcontrols.jsjbridge.*`.
        
