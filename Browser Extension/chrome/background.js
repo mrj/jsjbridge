@@ -24,8 +24,8 @@ chrome.storage.local.get(['licensed', 'licensedVersion', 'lastLicenceCheckTimeMS
 
   const ONE_WEEK_MS = 1000*60*60*24*7;
       
-   licensed = storedValues.licensed;
-   licensedVersion = storedValues.licensedVersion;
+  licensed = storedValues.licensed;
+  licensedVersion = storedValues.licensedVersion;
 
   function nativeDisconnect(portToNative) {
     var errorMessage = portToNative.error && portToNative.error.message;

@@ -85,3 +85,13 @@ You may redistribute a modified or re-packaged version of material that has been
   If you do not have enough information to determine a licensee's use-case as described by the specification of a direct-source, you will request this information from the licensee. If an attempt to pay a direct-source is unsuccessful, you will hold that amount in trust until payment is successful, making regular attempts to both pay what is owning and to contact the source to inform them of your payment failure.
   
 5. If 60 days after receiving a licence fee you are unable to make the required payment to a source, you will instead pay any direct-sources of this source the required licence fees as specified in Point 4, retaining in trust any remaining fee, and again applying this Point 5 if a payment is unsuccessful. 
+
+
+E. CERTAIN ASSOCIATED WORKS OF SOFTWARE ARE NOT DERIVED WORKS
+   ==========================================================
+
+A work of software is not a derived work of a DevWheels-licensed work if all the work does is make and receive calls to and from the DevWheels-licensed work that is acting as a separate library, module, or module host, including when parts of the DevWheels-licensed work must be present to build the software.
+
+Nor is a collection of source code a derived work of a DevWheels-licensed work if that source code is designed to call code or access data of that work by using its names and signatures, whether or not those names and signatures are part of a defined interface, but includes no source or built code from that work.
+
+Nor is a work that copies all or part of a software interface defined by a DevWheels-licensed work a derived work.
