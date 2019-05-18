@@ -72,6 +72,24 @@
                 </li>               
             </td>
           </tr>
+          <tr>
+            <td>1.6</td>
+            <td>2019-05-18</td>
+            <td>20</td>
+            <td><a href="jars/jsjbridge-1.6.jar">Download</a></td>
+            <td><a href="firefox/javascript_java_bridge-1.6-fx.xpi">Download</a></td>
+            <td><a href="chrome/jsjbridge-1.6-chrome.zip">Download</a></td>
+            <td>
+              <code>CSS2Properties</code> JavaScript objects return to the Version 1.1 behaviour of becoming JSObjects in Java rather than the Version 1.5 behaviour of becoming Java arrays.
+              This is because CSS properties can be set through these objects. For example, setting the colour of a DOM element in Java:
+              <pre><code>
+private void setColor(JSObject b, String color) {
+    JSObject style = (JSObject) b.getMember("style"); // style is a CSS2Properties object
+    style.setMember("backgroundColor", color);
+              </code></pre>
+              The jsjbridge.jar library has not changed between versions 1.5 and 1.6.
+            </td>
+          </tr>
         </tbody>
 
       </table>
