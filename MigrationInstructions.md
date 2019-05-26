@@ -2,7 +2,7 @@
 
 ## Java-Side (Java &ge; 8 required)
 
-1. Put both [jsjbridge.jar](Java/dist/jsjbridge.jar) and [json.jar](https://github.com/stleary/JSON-java) in your buildpath and classpath in place of plugin.jar.
+1. Put both [jsjbridge.jar](https://advancedcontrols.com.au/jsjbridge/releases.html) and [json.jar](https://github.com/stleary/JSON-java) in your buildpath and classpath in place of plugin.jar.
 
 1. Change imports of `netscape.javascript.*` to `au.com.advancedcontrols.jsjbridge.*`.
        
@@ -25,7 +25,7 @@
 
 ## Browser-Side (Firefox &ge; 58, Chrome &ge; 63 required)
 
-1. By default, the JSJBridge browser extension is inactive at all URLs. Go to the JSJBridge extension Preference page in the Extension Manager to set one or more URL prefixes at which the extension becomes active.
+1. By default, the JSJBridge browser extension is inactive at all URLs. Go to the JSJBridge extension Preference page in the Extension Manager to set one or more URL prefixes at which the extension becomes active. If you're using Chrome, and your HTML is on the filesystem, remember to enable the "Allow access to file URLs" JavaScript-Java Bridge extension setting.
 
 2. The `applet`/`object` HTML tags for your Applets can stay the same. JavaScript objects which represent your Applets must obtained via `document.getElementById` calls. It should also be OK when the actual `getElementById` calls are being made through a JavaScript library.
 
