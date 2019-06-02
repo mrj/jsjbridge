@@ -22,7 +22,7 @@ The advantage of this licence is that it both retains the enhanced debugging, cu
 If you have an idea for, or an implementation of, enhancements, I encourage you see whether they can be incorporated into my extension rather than publishing your own fork. We may be able to come to an agreement for a revenue share, and reduce the number of similar extensions.
   
 ### Migrating from Applets and the Java Plugin to WebpageHelpers and JSJBridge
-g
+
 See the [migration instructions](MigrationInstructions.md).
 
 ### [Release History](https://advancedcontrols.com.au/jsjbridge/releases.html)
