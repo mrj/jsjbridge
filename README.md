@@ -1,10 +1,10 @@
 # JavaScript-Java Bridge (JSJBridge)
 
-A web browser is a good user interface for native applications. The Java browser Plugin provided an easy way for Java programs, configured as Applets, to manipulate webpages, and for the webpages to both get and set Java fields and call Java methods via the [LiveConnect API](https://www.oracle.com/technetwork/java/javase/overview/liveconnect-docs-349790.html). This was in addition to the ability of Applets to display their graphics in a rectangle on their webpages.
+A web browser is a good user interface for a native application. The Java browser Plugin provided an easy way for Java programs, configured as Applets, to manipulate webpages, and for the webpages to both get and set Java fields and call Java methods via the [LiveConnect API](https://www.oracle.com/technetwork/java/javase/overview/liveconnect-docs-349790.html). This was in addition to the ability of Applets to display their graphics in a rectangle on their webpages.
 
 However both the Java Plugin and Applets are now being deprecated as security and browser-stability risks. Continued use of them requires use of an older browser version, and soon an older Java version.
 
-This Java library, and extension for both Firefox and Chrome, allows Applets which display no graphics but only interact with JavaScript to continue to be used on current browser and Java versions with minor changes on both the Java and JavaScript sides. Display of Applet graphics may be supported in the future.
+This Java library, and extension for both Firefox and Chrome, allows Applets which display no graphics but only interact with JavaScript and the DOM to continue to be used on current browser and Java versions with minor changes on both the Java and JavaScript sides. Display of Applet graphics may be supported in the future.
 
 The alternative to using this extension to turn a browser into a Java user interface would be to write the Java Program as a backend API, and have the browser frontend interact with this via Ajax/XMLHttpRequest calls, perhaps under a framework such as [React](https://reactjs.org/). This does have the advantage of weak coupling, allowing the backend and frontend to be separately developed, and simultaneously accessed from multiple browsers. But, besides the obvious advantage for UIs already written as Applets, the remote procedure call and remote DOM manipulation paradigm of JSJBridge/LiveConnect, and the automatic start-stop synchronisation of the front and back ends, can continue to make this an easy, efficient, and powerful solution.
 
@@ -22,7 +22,7 @@ The advantage of this licence is that it both retains the enhanced debugging, cu
 If you have an idea for, or an implementation of, enhancements, I encourage you see whether they can be incorporated into my extension rather than publishing your own fork. We may be able to come to an agreement for a revenue share, and reduce the number of similar extensions.
   
 ### Migrating from Applets and the Java Plugin to WebpageHelpers and JSJBridge
-
+g
 See the [migration instructions](MigrationInstructions.md).
 
 ### [Release History](https://advancedcontrols.com.au/jsjbridge/releases.html)

@@ -60,7 +60,9 @@
 
    The `initialized` event will fire on the `applet`/`object` element when its Java `init()` method has returned, allowing you to delay work until this has occurred.
 
-   If an attempt is made to access a non-DOM property of an Applet object, a call to Java is triggered, and the JavaScript expression returns a Promise. The JavaScript execution cycle will continue to execute the code after the Java call before the result is available.
+   If an attempt is made to access a nonexisting property of an Applet object, a call to Java is triggered,
+   and the JavaScript expression returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
+   The JavaScript execution cycle will continue to execute the code after the Java call before the result is available.
 
    So if you want JavaScript code to do something dependent on a value retrived from Java, you must either,
 
@@ -89,7 +91,7 @@
 
    The `showSize` call will return immediately, but the logging will be executed when the size is returned from Java.
 
-   If Java calls a JavaScript method that makes a number of showSize calls: e.g.
+   If Java calls a JavaScript method that makes a number of `showSize` calls: e.g.
 
    ```javascript
    function showSizes(vector1, vector2, vector3) {
