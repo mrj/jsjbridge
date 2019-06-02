@@ -1,6 +1,6 @@
 PACKAGE jsjbridge.advancedcontrols.com.au
 Name: JavaScript-Java Bridge
-Version: 1.5
+Version: 1.6
 Location: https://github.com/mrj/jsjbridge
 Licensing Conditions: 20 Australian Dollars (+10% GST for Australian residents) per browser
 Licensing Conditions Last Change Version: 1.0
