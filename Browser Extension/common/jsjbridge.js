@@ -166,7 +166,7 @@
         jsObjectsByUID.push(object);
         jsObjectsByObject.set(object, jsUID);
       }
-      return jsUID
+      return jsUID;
   }
   
   function castToJava(value) {
@@ -259,6 +259,7 @@
     var mdata = event.data
     if (event.source == window && typeof(mdata) === 'object' && mdata.to == 'jsjbridgePage') {
       var message = mdata.message;
+      if (message.name == 'addBatchIDs') console.dir(message.value);
 
       if (message.type == 'backgroundDisconnect') throw('The JSJBridge background script stopped.');
       
@@ -337,6 +338,7 @@
           case 'set':
           case 'start':
           case 'stop':
+          case 'destroy':
             needsReply = false;
             window.dispatchEvent(new CustomEvent(REPLY_EVENT_PREFIX+message.requestNumber, {detail: message}));
             break;
@@ -400,7 +402,7 @@
   });
   
   function exception_message(e) {
-    return (e.fileName && e.lineNumber ? e.fileName+':'+ e.lineNumber+' ' : '') + e.toString();
+    return e.stack + '\n';
   }
   
   function invokeoOnApplets(method) {

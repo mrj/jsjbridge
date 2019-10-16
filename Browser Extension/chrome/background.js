@@ -48,7 +48,7 @@ chrome.storage.local.get(['licensed', 'licensedVersion', 'lastLicenceCheckTimeMS
 
     if (licensed && (!licensedVersion || licensedVersion < VERSION_LAST_CHARGABLE)) {
       portToContentScript.disconnect();
-      chrome.windows.create({type: "panel", url: "unlicensed-popup.html", width: 650, height: 130});
+      chrome.windows.create({type: "panel", url: "unlicensed-popup.html", width: 650, height: 250});
       return;
     }
 
@@ -57,7 +57,7 @@ chrome.storage.local.get(['licensed', 'licensedVersion', 'lastLicenceCheckTimeMS
       if (!licensed) {
         var nowMS = Date.now();
         if (!storedValues.lastLicenceCheckTimeMS || nowMS - storedValues.lastLicenceCheckTimeMS >= ONE_WEEK_MS) {
-          chrome.windows.create({type: 'panel', url: 'licence-check-popup.html', width: 650, height: 230});
+          chrome.windows.create({type: 'panel', url: 'licence-check-popup.html', width: 650, height: 350});
           chrome.storage.local.set({lastLicenceCheckTimeMS: nowMS});
           storedValues.lastLicenceCheckTimeMS = nowMS;
         }

@@ -30,6 +30,7 @@ chrome.storage.local.get('allowedURLPrefixes', storedValues => {
       s.src = chrome.runtime.getURL('jsjbridge.js');
       s.async = false;
       document.documentElement.appendChild(s);
+      document.documentElement.removeChild(s);
     }
   }
 });

@@ -3,8 +3,9 @@
    Licensed under Version 1 of the DevWheels Licence. See file LICENCE.txt and devwheels.com.
 */
 
+const versionPrices = [[1.0, 20]]; // Only add a version when the price goes up
 
-var versionPrices = [[1.0, 20]]; // Only add a version when the price goes up
+const VERSION_LAST_CHARGABLE = '1.0'; // versionPrices[versionPrices.length-1][0];
 
 function paymentURL(priceExcludingTax, taxPercentage) {
   var product = 'JSJBridge ' + (licensedVersionFloat ? `${licensedVersion} to ${currentVersion} upgrade` : currentVersion);
@@ -44,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     licensedVersionBox.value = licensedVersion = storedValues.licensedVersion || 0;
     document.getElementById(storedValues.licensed ? 'licensedUsage' : 'freeUsage').checked = true;
     setLicensedState();
-    document.getElementById('currentVersion').innerHTML = currentVersion;
+    document.getElementById('versionLastChargeable').innerHTML = VERSION_LAST_CHARGABLE;
     urlPrefixBox.value = (storedValues.allowedURLPrefixes||[]).join('\n');
     
     licensedVersionBox.addEventListener('keyup mouseup', () => {

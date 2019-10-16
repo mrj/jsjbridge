@@ -48,7 +48,7 @@ browser.storage.local.get(['licensed', 'licensedVersion', 'lastLicenceCheckTimeM
 
     if (licensed && (!licensedVersion || licensedVersion < VERSION_LAST_CHARGABLE)) {
       portToContentScript.disconnect();
-      browser.windows.create({type: "panel", url: "unlicensed-popup.html", width: 650, height: 130});
+      browser.windows.create({type: "panel", url: "unlicensed-popup.html", width: 650, height: 250});
       return;
     }
 
@@ -57,7 +57,7 @@ browser.storage.local.get(['licensed', 'licensedVersion', 'lastLicenceCheckTimeM
       if (!licensed) {
         var nowMS = Date.now();
         if (!storedValues.lastLicenceCheckTimeMS || nowMS - storedValues.lastLicenceCheckTimeMS >= ONE_WEEK_MS) {
-          browser.windows.create({type: 'panel', url: 'licence-check-popup.html', width: 650, height: 230});
+          browser.windows.create({type: 'panel', url: 'licence-check-popup.html', width: 650, height: 350});
           browser.storage.local.set({lastLicenceCheckTimeMS: nowMS});
           storedValues.lastLicenceCheckTimeMS = nowMS;
         }
