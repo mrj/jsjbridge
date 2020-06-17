@@ -1,5 +1,5 @@
 /* JSJBridge Webpage Script
-   Copyright 2019 Mark Reginald James
+   Copyright 2020 Mark Reginald James
    Licensed under Version 1 of the DevWheels Licence. See file LICENCE.txt and devwheels.com.
 */
 
@@ -12,7 +12,10 @@
       jsObjectsByUID = [],
       jsObjectsByObject = new Map(),
       nextRequestNumber = 1,
-      REPLY_EVENT_PREFIX = 'replyToJSJBridgeRequest';
+      REPLY_EVENT_PREFIX = 'replyToJSJBridgeRequest',
+      isMozilla = document.getElementsByTagName('jsjbridge_mozilla')[0];
+      
+  if (isMozilla) isMozilla.remove();
 
   function log(source, msg, throwit) {
     var message = source + ': ' + msg;
@@ -170,7 +173,9 @@
   }
   
   function castToJava(value) {
-    if (value != null && typeof value !== 'string' && typeof value[Symbol.iterator] === 'function' && value.constructor.name !== 'CSS2Properties') {
+    // constructor.name is used instead of instanceof because of Chrome bug/feature
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=1095946
+    if (value != null && typeof value !== 'string' && typeof value[Symbol.iterator] === 'function' && value.constructor.name !== 'CSS2Properties' && value.constructor.name !== 'CSSStyleDeclaration') {
       if (value.length) {
         var castArray = new Array(value.length);
         for (var i=value.length-1; i>=0; i--) castArray[i] = castToJava(value[i]);
@@ -259,7 +264,6 @@
     var mdata = event.data
     if (event.source == window && typeof(mdata) === 'object' && mdata.to == 'jsjbridgePage') {
       var message = mdata.message;
-      if (message.name == 'addBatchIDs') console.dir(message.value);
 
       if (message.type == 'backgroundDisconnect') throw('The JSJBridge background script stopped.');
       
@@ -316,7 +320,16 @@
             break;
             
           case 'eval':
-            with(context()) { returnValue = eval(message.value); }
+            if (isMozilla) {
+              console.log(
+                'Error executing eval("' + message.value + '"). ' +
+                'Sorry, the JSObject eval method is only supported in Chrome/Chromium ' +
+                '( https://chrome.google.com/webstore/detail/javascript-java-bridge/beglnkgbajkhcmmdkldmgbkggoeegabe ),' +
+                ' as Mozilla consider it a security risk.'
+              );
+            } else {
+              with(context()) { returnValue = eval(message.value); }
+            }
             break;
             
           case 'getMember':
@@ -465,4 +478,6 @@
     document.addEventListener('DOMContentLoaded', activateApplets);
   else
     activateApplets();
+    
+  window.dispatchEvent(new Event('jsjbridgeActive'));
 })();

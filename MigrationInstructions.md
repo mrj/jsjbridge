@@ -2,7 +2,7 @@
 
 ## Java-Side (Java &ge; 8 required)
 
-1. Put both [jsjbridge.jar](https://advancedcontrols.com.au/jsjbridge/releases.html) and [json.jar](https://github.com/stleary/JSON-java) in your buildpath and classpath in place of plugin.jar.
+1. Put [jsjbridge.jar](https://advancedcontrols.com.au/jsjbridge/releases.html) in your buildpath and classpath in place of plugin.jar. If using version 1.7 or below, you also need [json.jar](https://github.com/stleary/JSON-java) in your buildpath and classpath.
 
 1. Change imports of `netscape.javascript.*` to `au.com.advancedcontrols.jsjbridge.*`.
        
@@ -20,7 +20,7 @@
   
   The default log level is "INFO".
 
-6. The [LiveConnect JSObject API](https://www.oracle.com/webfolder/technetwork/java/plugin2/liveconnect/jsobject-javadoc/index.html) should be able to be used unchanged, though a `JSObject.UNDEFINED` object is now returned when JavaScript returns `undefined`. Also, Java arrays are now passed to JavaScript by value rather than reference. This greatly speeds sending a large amount of data from Java to JavaScript, since there was previously a call to Java for each array access. But it also means that array changes are not automatically propagated back to Java.
+6. The [LiveConnect JSObject API](https://www.oracle.com/webfolder/technetwork/java/plugin2/liveconnect/jsobject-javadoc/index.html) should be able to be used unchanged, except that the `eval` method isn't available on the Firefox version, and a `JSObject.UNDEFINED` object is now returned when JavaScript returns `undefined`. Also, Java arrays are now passed to JavaScript by value rather than reference. This greatly speeds sending a large amount of data from Java to JavaScript, since there was previously a call to Java for each array access. But it also means that array changes are not automatically propagated back to Java.
 
 
 ## Browser-Side (Firefox &ge; 58, Chrome &ge; 63 required)
@@ -64,7 +64,7 @@
    and the JavaScript expression returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
    The JavaScript execution cycle will continue to execute the code after the Java call before the result is available.
 
-   So if you want JavaScript code to do something dependent on a value retrived from Java, you must either,
+   So if you want JavaScript code to do something dependent on a value retrieved from Java, you must either,
 
    (a) Preface your Java-calling expressions with `await`, inside an async function (or in a browser console).
    

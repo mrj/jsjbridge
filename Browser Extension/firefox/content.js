@@ -1,5 +1,5 @@
 /* JSJBridge Content Script
-   Copyright 2019 Mark Reginald James
+   Copyright 2020 Mark Reginald James
    Licensed under Version 1 of the DevWheels Licence. See file LICENCE.txt and devwheels.com.
 
    Relay messages between the webpage and the background script,
@@ -26,6 +26,8 @@ browser.storage.local.get('allowedURLPrefixes').then(storedValues => {
 
       // Inject the main code into the page so it can see all JavaScript and (non-proxied) DOM objects.
       //
+      document.documentElement.appendChild(document.createElement('jsjbridge_mozilla'));
+
       var s = document.createElement('script');
       s.src = browser.runtime.getURL('jsjbridge.js');
       s.async = false;

@@ -3,7 +3,7 @@
 
   "name": "JavaScript-Java Bridge",
   "short_name": "JSJBridge",
-  "version": "1.7",
+  "version": "1.8",
   "description": "A replacement for the Java Plugin, so Java Applets that use LiveConnect but have no graphics continue to work.",
   "minimum_chrome_version": "63",
 

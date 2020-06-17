@@ -1,7 +1,7 @@
 /* 
  *    JSJBridge JSObject Class
  *    Copyright 2019 Mark Reginald James
- *     Licensed under Version 1 of the DevWheels Licence. See file LICENCE.txt and devwheels.com.
+ *    Licensed under Version 1 of the DevWheels Licence. See file LICENCE.txt and devwheels.com.
 */
 
 package au.com.advancedcontrols.jsjbridge;
@@ -155,16 +155,17 @@ public class JSObject {
     private JSObject() {}
     private JSObject(int pid, int wid) { portId = pid; uid = wid; }
 
-    private static final int    REQUEST_TIMEOUT_S = 60,
-                                MAXIMUM_MESSAGE_LENGTH_BYTES = 1024 * 1024,
-                                MESSAGE_FRAGMENT_OVERHEAD_BYTES = 8,  // {"c":"<MSG>"}
-                                MESSAGE_FRAGMENT_SUFFIX_BYTES = 2,
-                                MAXIMUM_ENCODED_MESSAGE_LENGTH_BYTES = MAXIMUM_MESSAGE_LENGTH_BYTES - MESSAGE_FRAGMENT_OVERHEAD_BYTES,
-                                MESSAGE_FRAGMENT_PREFIX_BYTES = MESSAGE_FRAGMENT_OVERHEAD_BYTES - MESSAGE_FRAGMENT_SUFFIX_BYTES;
-
     private static final byte[] MESSAGE_CONTINUES_PREFIX    = new byte[]{'{','"', 'c', '"', ':', '"'},
                                 MESSAGE_FRAGMENT_END_PREFIX = new byte[]{'{','"', 'e', '"', ':', '"'},
                                 MESSAGE_FRAGMENT_SUFFIX     = new byte[]{'"','}'};
+
+    private static final int    REQUEST_TIMEOUT_S = 300,
+                                MAXIMUM_MESSAGE_LENGTH_BYTES = 1024 * 1024,
+                                MESSAGE_FRAGMENT_PREFIX_BYTES = MESSAGE_CONTINUES_PREFIX.length,
+                                MESSAGE_FRAGMENT_SUFFIX_BYTES = MESSAGE_FRAGMENT_SUFFIX.length,
+                                MESSAGE_FRAGMENT_OVERHEAD_BYTES = MESSAGE_FRAGMENT_PREFIX_BYTES + MESSAGE_FRAGMENT_SUFFIX_BYTES,  // {"c":"<MSG>"}
+                                MAXIMUM_ENCODED_MESSAGE_LENGTH_BYTES = MAXIMUM_MESSAGE_LENGTH_BYTES - MESSAGE_FRAGMENT_OVERHEAD_BYTES;
+
     static byte[] fragmentSuffixSave = new byte[2];
 
     private static HashMap<Object, Integer> contextsByObject;
@@ -238,15 +239,18 @@ public class JSObject {
 
             messageWebpage(messageJson);
 
-            try {
-                final JSONObject reply = replyFuture.get(REQUEST_TIMEOUT_S, TimeUnit.SECONDS);
-                if (reply.has("exception")) throw new JSException("Exception in JavaScript: " + reply.getString("exception"));
-                final Object replyValue = reply.get(VALUE_JSON_KEY);
-                return jSONValueToJava(replyValue, reply.getInt(CONTENT_SCRIPT_PORTID_JSON_KEY));
-            } catch (TimeoutException e) {
-                // Don't get caught in an infinite exchange of messages if there's a log reply timeout
-                if (!type.equals("log")) throw new JSException("No response to " + type + " \"" + String.valueOf(name) + "\" after " + REQUEST_TIMEOUT_S + "s");
+            while (true) {
+                try {
+                    final JSONObject reply = replyFuture.get(REQUEST_TIMEOUT_S, TimeUnit.SECONDS);
+                    if (reply.has("exception")) throw new JSException("Exception in JavaScript: " + reply.getString("exception"));
+                    final Object replyValue = reply.get(VALUE_JSON_KEY);
+                    return jSONValueToJava(replyValue, reply.getInt(CONTENT_SCRIPT_PORTID_JSON_KEY));
+                } catch (TimeoutException e) {
+                    // Don't get caught in an infinite exchange of messages if there's a log reply timeout
+                    if (!type.equals("log")) throw new JSException("No response to " + type + " \"" + String.valueOf(name) + "\" after " + REQUEST_TIMEOUT_S + "s");
+                } catch (InterruptedException e) {}
             }
+
         } catch (Exception e) {
             crash(e, target);
         }
@@ -360,11 +364,11 @@ public class JSObject {
                     case "Float32Array":
                         double[] floatArray = new double[length];
                         for (int i=length-1; i>=0; i--) floatArray[i] = (double)jarray.getDouble(i);
-                        return floatArray;                        
+                        return floatArray;
                     case "Float64Array":
                         double[] doubleArray = new double[length];
                         for (int i=length-1; i>=0; i--) doubleArray[i] = jarray.getDouble(i);
-                        return doubleArray;                                    
+                        return doubleArray;
 
                     default: return jSONValueToJava(jarray, portId);
                 }
@@ -493,7 +497,7 @@ public class JSObject {
                             try {
                                 final Class<?> helperClass = Class.forName(newHelperClassName);
                                 if (WebpageHelper.class.isAssignableFrom(helperClass)) {
-                                    newHelper = (WebpageHelper) helperClass.newInstance();
+                                    newHelper = (WebpageHelper) helperClass.getConstructor().newInstance();
                                     JSONObject value = (JSONObject) getJsonValue(newHelper);
                                     receivedMessage.put(VALUE_JSON_KEY, value);
                                     newHelper.jsObject = new JSObject(portId, value.getInt(JAVA_UID_JSON_KEY));
@@ -501,7 +505,7 @@ public class JSObject {
                                     Object canvasUID = receivedMessage.remove(CANVAS_UID_JSON_KEY);
                                     if (canvasUID != null) {
                                         newHelper.canvasJsObject = new JSObject(portId, (int)canvasUID);
-                                        newHelper.setSize(    Integer.parseInt((String)receivedMessage.remove(APPLET_WIDTH_JSON_KEY)),
+                                        newHelper.setSize(  Integer.parseInt((String)receivedMessage.remove(APPLET_WIDTH_JSON_KEY)),
                                                             Integer.parseInt((String)receivedMessage.remove(APPLET_HEIGHT_JSON_KEY)));
                                     }
                                 */
@@ -511,7 +515,7 @@ public class JSObject {
                                     setException(receivedMessage, "\"" + newHelperClassName + "\" is not a subclass of WebpageHelper", null, null);
                                 }
                             } catch (ClassNotFoundException e) {
-                                setException(receivedMessage, "No such Java class \"" + newHelperClassName + "\".", null, null);
+                                setException(receivedMessage, "No such fully-qualified Java class \"" + newHelperClassName + "\".", null, null);
                             } catch (InstantiationException | IllegalAccessException e) {
                                 setException(receivedMessage, "Could not create an instance of Java class \"" + newHelperClassName + "\".", null, null);
                             } 

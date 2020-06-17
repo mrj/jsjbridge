@@ -4,12 +4,12 @@
     <meta charset="utf-8"/>
     <title>JSJBridge Release History</title>
     <style>
-      body { font: bold 16px/1.5 non-serif; background: #efefec; padding: 1em; margin: 0; }
-      .notTooWide { max-width: 80em; margin: 6em auto; padding: 1em; color: #000; background: #1ac2fe; border: 2px solid; border-radius: 1em; }
+      body { font: 16px/1.5 sans-serif; background: #efefec; padding: 1em; margin: 0; }
+      .notTooWide {  margin: 6em auto; padding: 1em; color: #000; background: #1ac2fe; border: 2px solid; border-radius: 1em; }
       h1 { color: #fff; }
       table { width: 100%; }
       thead { background: #444; }
-      th { color: #ffefaf; }
+      th, th a { color: #ffefaf; }
       th:nth-child(3) { cursor: help; }
       tbody tr:nth-child(2n-1) { background: #ffefaf; }
       tbody tr:nth-child(2n) { background: #ccc; }
@@ -30,13 +30,66 @@
             <th>Release Date</th>
             <th title="The price to upgrade between versions is the difference between the two displayed prices.">Per-Browser<br/>Price, AUD</th>
             <th>JAR File</th>
-            <th>Firefox<br/>Extension</th>
-            <th>Chrome<br/>Extension</th>
+            <th><a href="https://addons.mozilla.org/en-US/firefox/addon/javascript-java-bridge/">Firefox<br/>Extension</a></th>
+            <th><a href="https://chrome.google.com/webstore/detail/javascript-java-bridge/beglnkgbajkhcmmdkldmgbkggoeegabe">Chrome<br/>Extension</a></th>
             <th>Notes</th>
           </tr>
         </thead>
 
         <tbody>
+          <tr>
+            <td>1.8</td>
+            <td>2020-06-15</td>
+            <td>20</td>
+            <td><a href="jars/jsjbridge-1.8.jar">Download</a></td>
+            <td><a href="firefox/javascript_java_bridge-1.8-fx.xpi">Download</a></td>
+            <td><a href="chrome/jsjbridge-1.8-chrome.zip">Download</a></td>
+            <td>
+              <ul>
+                <li>
+                  The jsjbridge.jar Java library:
+                  <ul>
+                    <li>
+                      Embed JSON code to remove the external json.jar dependency.
+                    </li><li>
+                      Retry waits for request replies when the thread is interrupted.
+                    </li>
+                  </ul>
+                </li><li>
+                  <p>
+                    Trigger a JavaScript <code>window.jsjbridgeActive</code> event when the
+                    JSJBridge code has been loaded and <code>getElementById</code> calls
+                    return a Java proxy rather than a normal HTML element.
+                  </p><p>
+                    Code can now be like
+                  </p>
+<code><pre>
+  addEventListener('jsjbridgeActive', function() {
+    var myHelper = document.getElementById('myApplet');
+    myHelper.addEventListener('initialized',  function() { ... });
+  });
+</pre></code>
+
+<p>
+instead of
+</p>
+
+<code><pre>
+  var myHelper = document.getElementById('myApplet');
+  myHelper.addEventListener('initialized',  function() {
+    myHelper = document.getElementById('myApplet');
+    ...
+  });
+</pre></code>
+                </li><li>
+                  On the Firefox version of the extension, disable the ability of Java to
+                  call <code>eval</code> on a JavaScript string. Mozilla believes this
+                  original feature of <code>JSObject</code> to be a security risk.
+                  It is still present on the Chrome/Chromium extension.
+                </li>
+              </ul>
+            </td>
+          </tr>
 
           <tr>
             <td>1.7</td>

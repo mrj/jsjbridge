@@ -4,9 +4,9 @@
     <meta charset="utf-8"/>
     <title>JSJBridge Licence Purchase Successful</title>
     <style>
-      body { font: bold 16px/1.5 non-serif; background: #efefec; padding: 1em; margin: 0; }
+      body { font: 16px/1.5 sans-serif; background: #efefec; padding: 1em; margin: 0; }
       .notTooWide { max-width: 40em; margin: 6em auto; padding: 1em; color: #fff; background: #1ac2fe; border: 2px solid; border-radius: 1em; }
-      #product { color: #ffefaf; }
+      #product, #licensedVersion { color: #ffefaf; }
     </style>
   </head>
 
@@ -15,12 +15,17 @@
       <p>
         Thank you for buying a <span id="product">JSJBridge</span> licence for this browser.
       </p><p>
-        You can now return to the JSJBridge extension preferences page, select the licensed option, and click "Save Changes".
+        You can now return to the JSJBridge extension preferences page,
+        select the licensed option,
+        enter <b id="licensedVersion"></b> in the licensed version box,
+        and click "Save Changes".
       </p><p>       
-        On the same page you should also disable automatic updates to prevent a chargeable upgrade from making this browser unlicensed.
+        On the same page you should also disable automatic updates to prevent a
+        chargeable upgrade from making this browser unlicensed, as well as to prevent an
+        incompatibility beween the extension and the installed <i>jsbridge.jar</i> Java library.
       </p>
   </body>
   <script>
-    //document.getElementById('product').innerHTML = decodeURIComponent(location.search.replace(/.*item_name=([^&$]*).*/, '$1'));
+    document.getElementById('licensedVersion').innerText = unescape(location.search.substr(1));
   </script>
 </html>
