@@ -30,7 +30,6 @@ If you choose to distribute a package of material under this licence, where none
 
 Second, you must add to the distribution a "sources.txt" file or "Sources" Section that uses the following format, without any white space at the beginnings of lines:
 
-<%= h %{\
 PACKAGE <short-unique-package-name>
 Name: <full-package-name>
 Version: <version-id>
@@ -39,9 +38,8 @@ Licensing Conditions: <list-of-licensing-use-cases-and-associated-fees>
 Licensing Conditions Last Change Version:  <version-id>
 Payment Information: <payment-information>
 Licensing Contact: <licensing-contact-information>
-} -%>
 
-The unique name of the package should not contain a white-space character and be unlikely to be used by another package. A way to achieve this is to make the unique name be an internet domain that you control, followed by a dot character and a short package name unique to your organisation or to your knowledge.
+The unique name of the package should be unlikely to be used by another package. A way to achieve this is to make the unique name be an internet domain that you control, followed by a dot character and a short package name unique to your organisation or to your knowledge.
 
 The package-unique version number or version ID should imply a standard ordering from earlier to later versions.
 
@@ -59,7 +57,7 @@ A field that provides instructions for paying the required licence fees for lice
 
 The package specification is completed by a contact information line that allows potential users and developers to (1), notify you of their licensing payments, (2), initiate negotiations on altered licence conditions and fees, and (3), inform you about package exclusions (see below). This field also allows potential contributors to initiate negotiations on integrating work into your package, perhaps in return for a share of your licence revenue.
 
-Package specifications can be written in a language other than English, however the English names of the specification fields must still be present at the start of lines, with comma-separated translations appended in brackets: For example, <code>"Location (Standort, Indawo): ..."</code>
+Package specifications can be written in a language other than English, however the English names of the specification fields must still be present at the start of lines, with comma-separated translations appended in brackets: For example, "Location (Standort, Indawo): ..."
 
 
 D. REDISTRIBUTION IN A NEW FORM
@@ -71,7 +69,7 @@ You may redistribute a modified or re-packaged version of material that has been
   
 2. You do not make any substantive subtractions from existing copyright notices.
 
-3. If part or all of the work that can put to use is built from source material, that source material and a non-restricted way to build the work must accompany all distributions of the work, with the exception of information that identifies the vendor to a licensing system.
+3. If the preferred way of making changes to the work is by building it from changed source material, that source material and a non-restricted way to build the work must accompany all distributions of the work, with the exception of information that securely identifies a vendor to a licensing system.
  
 4. The package you release contains a "sources.txt" file, or "Sources" Section, of the following form:
   
@@ -82,7 +80,7 @@ You may redistribute a modified or re-packaged version of material that has been
   (b) If a "DUP" prefix is added to a specification of the package for which this "sources.txt" is being compiled, all package specifications below this self-duplicate should be removed from the file, and 
   (c) The specifications of direct-source packages for which a "DUP" prefix has been added to a package specification that originated from that source must be altered by
     (i) Adding, if not already present, a "Net Excluded" field (above "Licensing Conditions"), to which the unique names of the packages to which the "DUP" prefix has been added should be added to a space-separated list, and  
-    (ii) Each licence fee in the "License Conditions" field is altered to first replace the fee with "&lt;original-fee&gt; (NET &lt;original-fee&gt;)" if the bracketed net pricing is not present, then, for each currency in this fee, and for each package to which a "DUP" has been added, subtracting from the net fee the equivalent net fee from the same or super-set use-case of that package,
+    (ii) Each licence fee in the "License Conditions" field is altered to first replace the fee with "<original-fee> (NET <original-fee>)" if the bracketed net pricing is not present, then, for each currency in this fee, and for each package to which a "DUP" has been added, subtracting from the net fee the equivalent net fee from the same or super-set use-case of that package,
   
 5. Within 40 days of receiving a licence fee for a particular version of your redistributed package, you pay, as specified in the associated "Payment Information" fields, either
    (i) For initial purchases of a package licence: The net fees as listed for the licensee's use-case in the "Licensing Conditions" fields of each direct-source package specification in the "sources.txt" file or "Sources" Section of the package version that has been licensed. 
