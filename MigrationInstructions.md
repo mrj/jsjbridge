@@ -58,26 +58,26 @@
 
 5. The extension makes Applet DOM objects both ususal `HTMLElement` objects, on which you can get and set normal properties, and also objects on which you can access and set Java fields, and call Java methods.
 
-  The `initialized` event will fire on the `applet`/`object` element when its Java `init()` method has returned, allowing you to delay work until this has occurred.
+   The `initialized` event will fire on the `applet`/`object` element when its Java `init()` method has returned, allowing you to delay work until this has occurred.
 
-  Because the extension has to check URL prefixes, it is not guaranteed to be active when the `document.DOMContentLoaded` or `window.load` events fire, or when inline JavaScript is executed. `getElementById` calls on Applets will return normal `HTMLElement`s rather than Java proxies before the `window.jsjbridgeActive` event fires, so instantiation of these should wait until then:
+   Because the extension has to check URL prefixes, it is not guaranteed to be active when the `document.DOMContentLoaded` or `window.load` events fire, or when inline JavaScript is executed. `getElementById` calls on Applets will return normal `HTMLElement`s rather than Java proxies before the `window.jsjbridgeActive` event fires, so instantiation of these should wait until then:
 
-  ```javascript
-  addEventListener('jsjbridgeActive', function() {
-    var myHelper = document.getElementById('myApplet');
-    myHelper.addEventListener('initialized',  function() { ... });
-  });
-  ```
+   ```javascript
+   addEventListener('jsjbridgeActive', function() {
+     var myHelper = document.getElementById('myApplet');
+     myHelper.addEventListener('initialized',  function() { ... });
+   });
+   ```
 
-  The HTML element can still be accessed before the `window.jsjbridgeActive` event, but it then needs to be reassigned before it can be used to interact with Java:
+   The HTML element can still be accessed before the `window.jsjbridgeActive` event, but it then needs to be reassigned before it can be used to interact with Java:
 
-  ```javascript
-  var myHelper = document.getElementById('myApplet');
-  myHelper.addEventListener('initialized',  function() {
-    myHelper = document.getElementById('myApplet');
-    ...
-  });
-  ```
+   ```javascript
+   var myHelper = document.getElementById('myApplet');
+   myHelper.addEventListener('initialized',  function() {
+     myHelper = document.getElementById('myApplet');
+     ...
+   });
+   ```
 
 6. If an attempt is made to access a nonexisting property of an Applet object, a call to Java is triggered,
    and the JavaScript expression returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
