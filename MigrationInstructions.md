@@ -20,7 +20,7 @@
   
   The default log level is "INFO".
 
-6. The [LiveConnect JSObject API](https://www.oracle.com/webfolder/technetwork/java/plugin2/liveconnect/jsobject-javadoc/index.html) should be able to be used unchanged, except that the `eval` method isn't available on the Firefox version, and a `JSObject.UNDEFINED` object is now returned when JavaScript returns `undefined`. Also, Java arrays are now passed to JavaScript by value rather than reference. This greatly speeds sending a large amount of data from Java to JavaScript, since there was previously a call to Java for each array access. But it also means that array changes are not automatically propagated back to Java.
+6. The [LiveConnect JSObject API](https://www.oracle.com/webfolder/technetwork/java/plugin2/liveconnect/jsobject-javadoc/index.html) should be able to be used unchanged, except that the `eval` method isn't available on the Firefox version (it's considered a security risk), and a `JSObject.UNDEFINED` object is now returned when JavaScript returns `undefined`. Also, Java arrays are now passed to JavaScript by value rather than reference. This greatly speeds sending a large amount of data from Java to JavaScript, since there was previously a call to Java for each array access. But it also means that array changes are not automatically propagated back to Java.
 
 
 ## Browser-Side (Firefox &ge; 58, Chrome &ge; 63 required)
@@ -58,9 +58,28 @@
 
 5. The extension makes Applet DOM objects both ususal `HTMLElement` objects, on which you can get and set normal properties, and also objects on which you can access and set Java fields, and call Java methods.
 
-   The `initialized` event will fire on the `applet`/`object` element when its Java `init()` method has returned, allowing you to delay work until this has occurred.
+The `initialized` event will fire on the `applet`/`object` element when its Java `init()` method has returned, allowing you to delay work until this has occurred.
 
-   If an attempt is made to access a nonexisting property of an Applet object, a call to Java is triggered,
+Because the extension has to check URL prefixes, it is not guaranteed to be active when the `document.DOMContentLoaded` or `window.load` events fire, or when inline JavaScript is executed. `getElementById` calls on Applets will return normal `HTMLElement`s rather than a Java proxy before the `window.jsjbridgeActive` event fires, so instantiation of these should wait until then:
+
+```javascript
+addEventListener('jsjbridgeActive', function() {
+  var myHelper = document.getElementById('myApplet');
+  myHelper.addEventListener('initialized',  function() { ... });
+});
+```
+
+The HTML element can still be accessed before the `window.jsjbridgeActive` event, but it then needs to be reassigned before it can be used to interact with Java:
+
+```javascript
+var myHelper = document.getElementById('myApplet');
+myHelper.addEventListener('initialized',  function() {
+  myHelper = document.getElementById('myApplet');
+  ...
+});
+```
+
+6. If an attempt is made to access a nonexisting property of an Applet object, a call to Java is triggered,
    and the JavaScript expression returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
    The JavaScript execution cycle will continue to execute the code after the Java call before the result is available.
 
@@ -157,7 +176,7 @@
   await scanner.enabled;
   ```  
   
-6. Expression Chains
+7. Expression Chains
 
 Java can be called in an expression chain, which will return a Promise that resolves when the a value is available for the chain.
 
@@ -190,5 +209,5 @@ var l = await helper.javaVector.get(0).then(v0 => v0.name).then(name => name.len
 ```
 ---
 
-5. JavaScript iterable objects except [typed arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays) become Java `Object` arrays. Typed arrays become Java primitive arrays of the natural `byte`, `short`, `int`, `long`, `float`, or `double` types. Unsigned typed arrays become the size-equivalent Java signed type, so Java 8+ unsigned methods must be used to get their correct values.
+8. JavaScript iterable objects except [typed arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Typed_arrays) become Java `Object` arrays. Typed arrays become Java primitive arrays of the natural `byte`, `short`, `int`, `long`, `float`, or `double` types. Unsigned typed arrays become the size-equivalent Java signed type, so Java 8+ unsigned methods must be used to get their correct values.
 
