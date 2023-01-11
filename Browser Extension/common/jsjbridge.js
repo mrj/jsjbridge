@@ -325,7 +325,7 @@
                 'Error executing eval("' + message.value + '"). ' +
                 'Sorry, the JSObject eval method is only supported in Chrome/Chromium ' +
                 '( https://chrome.google.com/webstore/detail/javascript-java-bridge/beglnkgbajkhcmmdkldmgbkggoeegabe ),' +
-                ' as Mozilla consider it a security risk.'
+                ' as Mozilla considers it a security risk.'
               );
             } else {
               with(context()) { returnValue = eval(message.value); }

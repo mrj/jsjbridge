@@ -1,6 +1,6 @@
 /* 
  *    JSJBridge JSObject Class
- *    Copyright 2019 Mark Reginald James
+ *    Copyright 2020 Mark Reginald James
  *    Licensed under Version 1 of the DevWheels Licence. See file LICENCE.txt and devwheels.com.
 */
 
@@ -29,13 +29,13 @@ public class JSObject {
     // Public
 	
 	/*
-	 * Emulation of the <a href="https://www.oracle.com/technetwork/java/javase/overview/liveconnect-docs-349790.html">LiveConnect API</a>
-	 * of the Java Plugin, with the following changes"
+	 * Emulation of the <a href="https://www.oracle.com/java/technologies/javase/liveconnect-docs.html">LiveConnect API</a>
+	 * of the Java Plugin, with the following changes:
 	 * 
 	 * 1. Java arrays are passed to JavaScript by value rather than reference, greatly speeding the transfer of large amounts of data
 	 *    without having to encode that data as a String. To pass an array by reference so that changes are reflected in the Java object,
 	 *    wrap arrays in an object such as an ArrayList.
-	 *    
+	 *
 	 * 2. The arguments of a JavaScript function to call can be given as separate arguments to the call method, rather than an
 	 *    Object array. An extra dummy argument must be added to call a JavaScript method that takes a single array parameter. 
 	 */
@@ -144,16 +144,23 @@ public class JSObject {
         return sendRequest(type, name, null);
     }
 
-    // Package & WebpageHelpers can access
-
-    protected static Object log(String msg, JSObject target) {
+    static Object log(String msg, JSObject target) {
         return doSendRequest(target, "log", null, msg);
     }
 
     // Private
 
     private JSObject() {}
-    private JSObject(int pid, int wid) { portId = pid; uid = wid; }
+    private JSObject(int portId, int uid) { this.portId = portId; this.uid = uid; }
+
+    private static HashMap<Integer, ArrayList<WebpageHelper>> appletsByPortId = new HashMap<Integer, ArrayList<WebpageHelper>>();
+    private static HashMap<Integer, ArrayList<JSObject>> JSObjectsByPortId = new HashMap<Integer, ArrayList<JSObject>>();
+
+    private static JSObject create(int portId, int uid) {
+        JSObject newObject = new JSObject(portId, uid);
+        synchronized (JSObjectsByPortId) { JSObjectsByPortId.get(portId).add(newObject); }
+        return newObject;
+    }
 
     private static final byte[] MESSAGE_CONTINUES_PREFIX    = new byte[]{'{','"', 'c', '"', ':', '"'},
                                 MESSAGE_FRAGMENT_END_PREFIX = new byte[]{'{','"', 'e', '"', ':', '"'},
@@ -166,11 +173,14 @@ public class JSObject {
                                 MESSAGE_FRAGMENT_OVERHEAD_BYTES = MESSAGE_FRAGMENT_PREFIX_BYTES + MESSAGE_FRAGMENT_SUFFIX_BYTES,  // {"c":"<MSG>"}
                                 MAXIMUM_ENCODED_MESSAGE_LENGTH_BYTES = MAXIMUM_MESSAGE_LENGTH_BYTES - MESSAGE_FRAGMENT_OVERHEAD_BYTES;
 
-    static byte[] fragmentSuffixSave = new byte[2];
+    private static byte[] fragmentSuffixSave = new byte[2];
 
+    // TODO: Implement a JavaScript JavaObject "free" method which dereferences these.
+    //
     private static HashMap<Object, Integer> contextsByObject;
     private static ArrayList<Object> contextsByUID;
-    private static HashMap<Class<?>, HashMap<String, ArrayList<Method>>>  methodsByClassAndName;
+
+    private static HashMap<Class<?>, HashMap<String, ArrayList<Method>>> methodsByClassAndName;
 
     private static ByteBuffer sendingMessageLengthBuffer, receivingMessageLengthBuffer;
     private static byte[] receivingMessageLengthBytes;
@@ -232,7 +242,7 @@ public class JSObject {
             if (name != null) messageJson.put(NAME_JSON_KEY, name);
             if (value != null) messageJson.put(VALUE_JSON_KEY, getJsonValue(value));
 
-            synchronized (nextRequestNumber) {
+            synchronized (replyFutures) {
                 messageJson.put(REQUEST_NUMBER_JSON_KEY, nextRequestNumber);
                 replyFutures.put(nextRequestNumber++, replyFuture);
             }
@@ -247,7 +257,10 @@ public class JSObject {
                     return jSONValueToJava(replyValue, reply.getInt(CONTENT_SCRIPT_PORTID_JSON_KEY));
                 } catch (TimeoutException e) {
                     // Don't get caught in an infinite exchange of messages if there's a log reply timeout
-                    if (!type.equals("log")) throw new JSException("No response to " + type + " \"" + String.valueOf(name) + "\" after " + REQUEST_TIMEOUT_S + "s");
+                    if (type.equals("log"))
+                        return null;
+                    else
+                        throw new JSException("No response to " + type + " \"" + String.valueOf(name) + "\" after " + REQUEST_TIMEOUT_S + "s");
                 } catch (InterruptedException e) {}
             }
 
@@ -377,7 +390,7 @@ public class JSObject {
                         jo.has(NAN_JSON_KEY) ? Double.NaN :
                         jo.has(POSITIVE_INFINITY_JSON_KEY) ? Double.POSITIVE_INFINITY :
                         jo.has(NEGATIVE_INFINITY_JSON_KEY) ? Double.NEGATIVE_INFINITY :
-                                                             new JSObject(portId, jo.getInt(JS_WINDOW_UID_JSON_KEY));
+                                                             create(portId, jo.getInt(JS_WINDOW_UID_JSON_KEY));
             }
         } else if (o instanceof JSONArray) {
             JSONArray jarray = (JSONArray)o;
@@ -397,8 +410,8 @@ public class JSObject {
         synchronized (messageSender) {
             // Avoid unnecessary String construction
             boolean doLog = WebpageHelper.hlog.getLevel().intValue() <= NativeMessagingLogLevel.STDERR_ONLY_JSJBRIDGE_DEBUG.intValue();
-
             if (doLog) WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY_JSJBRIDGE_DEBUG, "SENDING MESSAGE: " + message + "\n");
+
             if (messageBytes.length <= MAXIMUM_MESSAGE_LENGTH_BYTES) {
                 sendMessage(messageBytes, 0, messageBytes.length);
             } else {
@@ -454,7 +467,7 @@ public class JSObject {
 
         private String errorMsg(Object context, String name) {
             return "\"" + name + "\" of class \"" + context.getClass().getTypeName() + "\"";
-        }    
+        }
 
         private String errorMsg(String prefix, String invocation) {
             return prefix + " " + invocation;
@@ -480,8 +493,8 @@ public class JSObject {
                     byte[] messageBytes = new byte[messageLength];
                     System.in.read(messageBytes, 0, messageLength);
                     String message = new String(messageBytes, StandardCharsets.UTF_8);
-                    if (message.charAt(0) != '{' ) return;
-                    WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY_JSJBRIDGE_DEBUG,"GOT " + messageLength + " BYTE MESSAGE \"" + message + "\"\n");
+                    if (message.charAt(0) != '{') return;
+                    WebpageHelper.hlog.log(NativeMessagingLogLevel.STDERR_ONLY_JSJBRIDGE_DEBUG, "GOT " + messageLength + " BYTE MESSAGE \"" + message + "\"\n");
                     receivedMessage = new JSONObject(message);
 
                     final String messageType = receivedMessage.getString(TYPE_JSON_KEY);
@@ -500,7 +513,15 @@ public class JSObject {
                                     newHelper = (WebpageHelper) helperClass.getConstructor().newInstance();
                                     JSONObject value = (JSONObject) getJsonValue(newHelper);
                                     receivedMessage.put(VALUE_JSON_KEY, value);
-                                    newHelper.jsObject = new JSObject(portId, value.getInt(JAVA_UID_JSON_KEY));
+                                    synchronized (JSObjectsByPortId) {
+                                        ArrayList<WebpageHelper> appletsForPort = appletsByPortId.get(portId);
+                                        if (appletsForPort == null) {
+                                            appletsByPortId.put(portId, appletsForPort = new ArrayList<WebpageHelper>());
+                                            JSObjectsByPortId.put(portId, new ArrayList<JSObject>());
+                                        }
+                                        newHelper.jsObject = create(portId, value.getInt(JAVA_UID_JSON_KEY));
+                                        appletsForPort.add(newHelper);
+                                    }
                                 /*
                                     Object canvasUID = receivedMessage.remove(CANVAS_UID_JSON_KEY);
                                     if (canvasUID != null) {
@@ -549,6 +570,19 @@ public class JSObject {
                                         helper._destroy();
                                     } catch (Exception e) {
                                         helper.nlog.log(Level.SEVERE, "Exception destroying " + helper.className, e);
+                                    }
+                                    synchronized (contextsByObject) {
+                                        contextsByUID.set(javaUID, null);
+                                        contextsByObject.remove(helper);
+                                    }
+                                    synchronized (JSObjectsByPortId) {
+                                        helper.jsObject = null;
+                                        ArrayList<WebpageHelper> appletsForPort = appletsByPortId.get(portId);
+                                        appletsForPort.remove(helper);
+                                        if (appletsForPort.isEmpty()) {
+                                            appletsByPortId.remove(portId);
+                                            JSObjectsByPortId.remove(portId);
+                                        }
                                     }
                                 }, "Destroying " + helper.className).start();
                             } else {
@@ -657,7 +691,7 @@ public class JSObject {
                     } else {
                         final long requestNumber = receivedMessage.getLong(REQUEST_NUMBER_JSON_KEY);
                         CompletableFuture<JSONObject> replyFuture;
-                        synchronized (nextRequestNumber) { replyFuture = replyFutures.remove(requestNumber); }
+                        synchronized (replyFutures) { replyFuture = replyFutures.remove(requestNumber); }
                         if (replyFuture != null) replyFuture.complete(receivedMessage);
                     }
                 }

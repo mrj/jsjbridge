@@ -2,100 +2,207 @@
                                   | The DevWheels Licence, Version 1 |
                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A. USE OF THIS WORK
-   ================
+
+A. DEFINITIONS OF THE SOURCES OF A VERSION OF A WORK
+   =================================================
    
-1. You are permitted to use this work to
-   (a) Evaluate whether you wish to use the work for your intended use, or
-   (b) To develop or internally test (not in its intended use) either the work itself or a collection of works of which this work is a part.
+A "derivation-source" of a version of a work is a version of a different work from which that version of the first work has been substantially derived, including when the influence of that version of the second work on that version of the first work is indirect, through other versions or works.
+
+A version of a work is not a derivation-source of a version of a work if either
+
+  (a), These two works are versions of the same work, from the same managers or their predecessors,
+
+  (b), That version of the second work either bundles or has been bundled with that version of the first work, where that version of the first work retains its original licensing rights holders, and is used in a standard way,
+
+  (c), The sole function of that version of the first work in relation to that version of the second work is to receive and make calls from and to that version of the second work through standard software interfaces, acting as a separate library, tool, module, or module host, including when parts of that version of the first work must be present to transform that version of the second work to a usable form, or
+
+  (d), The functionality of that version of the first work has been reverse-engineered by that version of the second work, without reference to the ways and means of that version of the first work.
+
+Otherwise, a version of a work is still a derivation-source of a version of a work if either
+
+  (i), The only substantial difference between the two versions of works are the holders of either their copy or licensing rights, or claims of such, or
+  
+  (ii), That version of the second work copies software names or calling interfaces from that version of the first work, whether or not any of the computational instructions of that version of the first work are also copied.
+
+A "direct-derivation-source" of a version of a work is a derivation-source of that version of the work whose influence on that version of the first work is not solely due that derivation-source being a derivation-source of other versions or works.
+
+A "dependent-source" of a use of a version of a work is a version of another work, other than a derivation-source, which has been made present in some form so that this version of the first work can either be used in that way or be transformed to a usable form for that use, whether that version of the other work has been distributed with that version of the first work, has been obtained separately, or is used remotely.
+
+A "source" of a use of a version of a work is either a derivation-source of that version of the work or a dependent-source of that use of that version of the work.
+
+A "DevWheels-licensed derivation-source" of a version of a work is a derivation-source of that version of the work whose derivation by that work is subject to a version of this licence, and where every version of a work in the chain of derivations between those two versions of works, if any, is subject to a version of this licence.
+
+A "DevWheels-licensed direct-derivation-source" of a version of a work is a direct-derivation-source of that version of the work whose derivation by that version of the work is subject to a version of this licence.
+
+A "DevWheels-licensed dependent-source" of a use of a version of a work is a dependent-source of that use of that version of the work whose use by that version of the work is subject to a version of this licence.
+
+A "DevWheels-licensed source" of a use of a version of a work is either a DevWheels-licensed derivation-source of that version of the work or a DevWheels-licensed dependent-source of that use of that version of the work.
+
+
+B. USE OF WORKS
+   ============
    
-2. Before you can use, or let others use, a copy you have obtained of a particular version of this work, in a way other than that described in Term 1, you must determine whether you must pay a licence fee to use this version of the work for a certain period, and, if so, pay that fee. Both may be achieved in at least one of four ways:
-   (a) By using a licensing mechanism built in to the work itself,
-   (b) By consulting either a file in your copy named "sources.txt", or a "Sources" Section, at the top of which will be a specification for the work that contains a "Licensing Conditions" field, at the top of which is a link to licensing software,
-   (c) By consulting the same "Licensing Conditions" information as described in (b), matching your attributes, intended use, and desired licensing period to one of the described "use-cases" to derive a licence fee, subtracting the cumulative fees you have paid to license previous versions of the work for the same period (or, if not known, subtracting the fee specified in the "sources.txt" file or Sources Section of the version of the package from which you have upgraded), then using the "Payment Information" field to pay any positive net fee, or
-   (d) By concluding an agreement with the copyright holders of the work for a particular licence fee and period.
+1. Your use of a version of a work is an "evaluation-use" if that use is outside your intended use, or is for the purposes of either developing that version of that work or evaluating whether you wish to make your intended use of that version of that work.
+
+2. You can make an evaluation-use of a version of a work that is subject to this licence without paying the licence fee specified by this licence.
    
-3. If your reasonable attempts at making the required payment by any of the above methods are unsuccessful, you may use the work for seven days without charge, during which time you should make other attempts to pay, and make attempts inform the licensor of your payment failure using the "Licensing Contact" field. If payment has been unsuccessful after seven days, you should attempt to purchase licences from each of the direct-source works of the work you wish to use. The specifications of these direct-source packages will be indented four spaces in the "sources.txt" file or "Sources" Section. Again, follow the procedure given in this licence term to make your payment (any fee listed as NET applies), moving to more deeply-indented packages if unsuccessful until either all branches of the source tree of the package you wish to use have been licensed, or the packages you are unable to license have no deeper packages.
+3. A version of a work that is subject to this licence and has been made available for a use other than an evaluation-use will be referred to as a version of a package, and will either contain a file named "sources.txt", or have a "Sources" Section. This is the "source tree" of that version of that package. At the top of the source tree of a version of a package will be a specification of that version of that package, starting with "DEVWHEELS-PACKAGE" and the package's unique name, followed by a number of fields, including a version identifier, and ending with a blank line. The "Licensing Conditions" field of this specification will contain a definition of the sole unit-of-use of that version of that package, being the extent (including period) of use that one use-licence encompasses.
 
-B. UNCHANGED REDISTRIBUTION
-   ========================
+4. Before you can make each such unit-of-use, other than an evaluation-use, of a version of a package that is subject to this licence, including derivative works that must by Term D be subject to this licence prior to such use, and including accompanying use of versions of packages that are DevWheels-licensed dependent-sources for this use, even when the central work being used is not subject to a version of this licence, you must determine whether you must pay one or more licence fees to make this particular use of all these versions of packages for a period equal to the minimum period for which you license one of these versions of packages, and if so, pay those fees.
 
-You are permitted to redistribute an unchanged and unaugmented copy of what you have received.
+   One of the following ways must be used to check whether a fee applies for a use of a version of a package, and if so, to pay that fee:
+
+   (a), By concluding that you do not need a licence to make this use of this version of this package because either this use has been authorised by the holders of the licensing rights of this version of this package or that this version of this package has been withdrawn without substitute as described in Term E1(a),
+
+   (b), By using a licensing mechanism built-in to this version of this package, which may also allow licensing of dependent-sources,
+
+   (c), By consulting the "Licensing Conditions" of this version of this package, at the top of which may be a link to a licensing service, which may also allow licensing of dependent-sources,
+
+   (d), By consulting the "Licensing Conditions" of this version of this package, matching your attributes and intended use to either the sole or one of the numbered "use-cases" to select the associated net licence fee for this use of this version of this package in one of the offered currency options, then, unless different methods are stated, multiplying that fee by both the quantity of uses being bought and, for non-perpetual units-of-use, the number of use periods being bought for each, then, if you are changing versions for these uses of this version of this package, unless a different method for calculating version change fees has been specified in the licensing conditions of the version you are newly licensing, subtracting the net fee, multiplied again by quantity and periods, as stated for your current use-case in the specification of this package version in the source tree of your previously-licensed version of the same package, or concluding that no version change fee is payable because both the version you desire to use and the version you previously licensed are equal to or greater than the version-ID given in the "Licensing Conditions Last Change Version" field of the specification of the version of the package you are newly licensing, then using the "Payment Information" specification field to calculate a final fee and pay this fee if greater than zero, telling the payment recipient, via either the payment mechanism or the information in the "Licensing Contact" field, the unique name of the package you are licensing, your use-case number, your requested licence quantity and period, either the version-ID of the package you are licensing or the version-IDs between which you wish to change, and any additional information that the managers of this package version require to license this use, or
+   
+   (e), By concluding an agreement with the holders of the licensing rights of this version of this package for a particular licence fee and period for this use.
+   
+   Following completion of one of these ways of licensing a use of a version of a package, including ways (a) and (e), the managers of that version of that package must use the method described in Terms E2 and E3 to license the same use of all non-duplicate DevWheels-licensed direct-derivation-sources of that version of that package, if any.
+   
+   Managers of a package must honour your request to change one of your licensed uses of their package to a version with an equal or lower licence fee for both your licensed and current use-cases, once they are objectively satisfied that you will no longer make that use of your currently-licensed version of their package. They are not however required to either provide a fee refund or provide this service at no charge.
+   
+   Once you have licensed a use of a version of a package, whose managers are able to associate this licence with a means of contacting you, on your request those managers are required to supply you with a licence text for that use, as described in Term E4. Managers of a version of a package may transfer the licence for a use to a different use by either yourself or a specified new licensee, either on your request or on presentation of the licence text by that text's owner. A requested transfer must occur if (a), you directly-licensed that version of that package for use (including dependent-sources), (b), the new use has the same use-case for that version of that package, and (c), the managers of that version of that package are objectively satisfied that you will no longer make the current use of that package. As a consequence of licensing a version of a package for a use, managers of other DevWheels-licensed versions of packages the in the source tree of that version of that package are not required to either allow you to make that use of that version of their package, supply a licence text for that use, or transfer any licence so issued to a different use.
+   
+   If your use-case as described in (d) above changes because either you are using a version of a package in a new way or your category of licensee has changed, you must again check your fee obligations and pay any positive difference. Package managers are permitted to discontinue a use of their package version if they can prove that you are delinquent in paying for a change in use-case for that use of that package version.
+   
+5. Unless the managers of a version of a package have refused to license a use, including if that package version has been withdrawn and cannot be licensed according to Term E1(a), if your reasonable attempts at making a required payment for that use by all the above methods have been unsuccessful, you may make that use for seven days without charge, during which time you should make other attempts to pay, and make attempts to inform the managers of your payment failure by using the package's "Licensing Contact" specification field. If after seven days no attempt to make this payment has been successful, (i), you can make that unit-of-use without a licence for that package version, and (ii), you should attempt to purchase licences from each of the DevWheels-licensed direct-derivation-sources of this package version by using the method described in Terms E2 and E3. Continue until either all DevWheels-licensed sources of the package versions you wish to use have been licensed, or the package versions you are unable to license have no deeper direct-derivation-sources.
 
 
-C. INITIAL DISTRIBUTION OF MATERIAL UNDER THIS LICENCE
+C. OBLIGATIONS WHEN MAKING THIS WORK AVAILABLE FOR USE BY OTHERS, WITHOUT TAKING OWNERSHIP
+   =======================================================================================
+   
+You can distribute, or otherwise make available for use, subject to any licence that does not invalidate a term of this licence, a package of material that contains, substantially unaltered, one or more works that are subject to a version of this licence, provided that
+
+  (a), Each work remains subject to the same version of this licence,
+
+  (b), You do not change either the copyright or licensing rights of any such contained work, and do not make substantive changes to any notices of such rights,
+  
+  (c), For each such contained work, your package allows easy access to both the text of its DevWheels licence and an unaltered source tree, as described in Term E1, in such a way that each work can be matched to its licence and source tree, and
+  
+  (d), Potential users of the contained works are made aware of their obligation to license use other than evaluation-use as defined in Term B1, by retaining any in-work licensing mechanism, or otherwise through prominent notices that allow potential users to understand the circumstances in which each contained work may be used in a licensable way.
+  
+
+D. OBLIGATIONS WHEN MAKING A DERIVED WORK AVAILABLE FOR USE
+   ========================================================
+
+If you create a work that is derived from this work, then before you make your work available for use, either by yourself or others, other than an evaluation-use as defined in Term B1, and your work has one or more DevWheels-licensed derivation-sources, at least one of which has licensing rights holders that differ from those of your work, the entirety of your work must be subject to a version of this licence that is no lower than that to which a DevWheels-licensed derivation-source with differing licensing rights holders was subject at the time of its last influence on your work, with or without extra licences or licence conditions that do not conflict with the chosen licence version, unless the holders of the licensing rights of all DevWheels-licensed derivation-sources of your work have agreed that you may make the work available for one or more uses without it being subject to either that version or any version of this licence.
+
+
+E. OBLIGATIONS WHEN MAKING YOUR WORK AVAILABLE FOR USE
    ===================================================
+   
+1. Before you make a work, referred to as a version of a package, that is subject to this licence available for use, either by yourself or others, other than an evaluation-use as defined in Term B1, that version of that package must contain either a "sources.txt" file or "Sources" Section (the "source tree" of that package version), of the following form:
 
-If you choose to distribute a package of material under this licence, where none of that material at the time at which that material was last sourced was licensed under a version of this licence, you must first abide by condition D3 below.
+(a), The source tree of a package version starts with a specification of the package version itself, in the following format, without any blank space at the beginnings of lines:
 
-Second, you must add to the distribution a "sources.txt" file or "Sources" Section that uses the following format, without any white space at the beginnings of lines:
+    DEVWHEELS-PACKAGE <unique-package-name>
+    Name: <descriptive-package-name>
+    Version: <version-ID>
+    Location: <link-to-package-version>
+    Licensing Conditions: <licensing-use-cases-and-associated-licensing-fees>
+    Licensing Conditions Last Change Version: <version-ID>
+    Payment Information: <payment-information>
+    Licensing Contact: <licensing-contact-information>
 
-PACKAGE <short-unique-package-name>
-Name: <full-package-name>
-Version: <version-id>
-Location: <package-location>
-Licensing Conditions: <list-of-licensing-use-cases-and-associated-fees>
-Licensing Conditions Last Change Version:  <version-id>
-Payment Information: <payment-information>
-Licensing Contact: <licensing-contact-information>
+    The unique package name must be both unique over all packages that are subject to a version of this licence, and unchanged over this package's sequence of version-IDs. One way to achieve this is to suffix a name related to the package's purpose with a "." character followed by a unique name allocated from a singular registry to the control of this package's managers. Only packages whose versions are coordinated can use the same unique name. A package's unique name can change, initiating a separate sequence of version-IDs.
+    
+    There are no restrictions on the descriptive package name, which can be shared with packages managed by others, although trademarks should be respected.
 
-The unique name of the package should be unlikely to be used by another package. A way to achieve this is to make the unique name be an internet domain that you control, followed by a dot character and a short package name unique to your organisation or to your knowledge.
+    The version-ID must be unique over all versions of this package that have been made available by this package's managers and their predecessors for non-evaluation-use, and imply a standard ordering from earlier to later versions. The version-ID should be increased whenever either a modified package or a package with changed licensing conditions is made available for use.
+    
+    The presence of line below this package version field that states "VERSION WITHDRAWN YYYY/MM/DD" indicates both that it is not possible to license use of this version of this package after the given date and that package versions whose release, as defined in Term F, or first non-evaluation use is made after the given date are not permitted to use this withdrawn package version as a DevWheels-licensed derivation-source, unless there is no non-withdrawn version of this package that provides all or almost all the utility of this withdrawn version, in which case both derivation and unlicensed non-evaluation use is permitted.
 
-The package-unique version number or version ID should imply a standard ordering from earlier to later versions.
+    The "Location" field must be a link through which a copy of this version of this package can be obtained, and optionally used. The most recent version of the source tree of this package version must be accessible through this link, which can only differ from other versions of this source tree by the presence or absence of the above version withdrawal line. A direct link to this reference source tree is one way to provide the required source trees to managers to whom fees are forwarded as detailed in Term E2 below. Both the location and reference source tree links should be chosen for maximum longevity.
 
-The package location will normally be a link to a document at which the package is described, and/or can be downloaded, cloned, or merged.
+    The "Licensing Conditions" field should define the package's sole unit-of-use — the extent (including period) of use that one use-licence encompasses.
 
-The licensing conditions are a list of one or more use-cases, covering all potential users, which can vary according to the attributes of the licensee, the intended use of the package by the licensee, and the licence period (perpetual if omitted). A use-case cannot include an always-free use described in Term A1 of this licence. 
+    Further, the licensing conditions can either apply to all prospective licensees or can describe one or more use-cases, which can vary according to the attributes of the prospective licensee and the intended use of that package version by that prospective licensee. A use-case cannot include an evaluation-use as defined in Term B1. If there is more than one use-case, they must be numbered.
+    
+    A licence fee (which can be zero) should be appended to the description of each use-case, or simply stated for a sole unrestricted use-case. A licence fee can either be specified in a single currency, in multiple currencies, or as a chain of additions and subtractions of amounts in different currencies. Use not covered by any use-case has a zero licence fee.
+    
+    The most simple licensing condition is therefore a single fee for a given perpetual unit-of-use. Each licence fee you specify must include all charges required to obtain a licence for that use, with the exception of payment surcharges and discounts that are independent of use-case, which are specified in the "Payment Information" field below.
 
-Append to the description of each use-case a licensing fee (which can be zero), in one or more currencies. If no use-case is described, the licensing fee applies to all use-cases. A minimum list of licensing conditions is therefore just a single fee for a perpetual licence. The licensing fees you specify must be sufficient for their associated use-cases. There can be no unstated licensing fees such as patent licensing. 
+    The licensing conditions can also describe formulas that vary either the normal fee multiplication for single purchases of either multiple licences or multiple unit-of-use periods, or the default fee-difference calculation for changing versions.
 
-Above this list of use-cases and licence fees you can include a link to software that helps end-users determine their use-cases and licensing fees. This must however be an addition rather than a replacement for the licensing conditions text.
+    At the top of the "Licensing Conditions" field you can optionally provide a link to a service that helps prospective licensees determine their use-cases and licence fees, and which optionally accepts payments for these fees. This must however be an addition rather than a replacement for the complete conditions text.
 
-The "Licensing Conditions Last Change Version" field specifies the version ID of this package branch for which the licensing conditions last changed.
+    The "Licensing Conditions Last Change Version" field specifies the version-ID of this package version sequence for which a licensing condition last changed, allowing the need for an upgrade fee for the default fee-difference method to be quickly assessed.
 
-A field that provides instructions for paying the required licence fees for licensing this version follows, the text of which must describe any surcharges or discounts for different payment methods.
+    The "Payment Information" field instructs both prospective licensees and the managers of packages with DevWheels-licensed direct-derivation-sources how to pay their required licence fees, the text of which must describe any surcharges or discounts for the use of particular payment methods and currencies by particular payers. A link to a licensing service can substitute for either a link to or details of a direct payment processor.
 
-The package specification is completed by a contact information line that allows potential users and developers to (1), notify you of their licensing payments, (2), initiate negotiations on altered licence conditions and fees, and (3), inform you about package exclusions (see below). This field also allows potential contributors to initiate negotiations on integrating work into your package, perhaps in return for a share of your licence revenue.
+    The package version specification is completed by a "Licensing Contact" field that allows both package licensees and managers of derived package versions to both notify you of their licensing payments and initiate negotiations on altered licence conditions and fees. This field also provides a way for potential contributors to initiate negotiations on integrating work into your package, perhaps in return for a share of your licensing revenue.
+    
+    Package specifications can be written in a language other than English. However the English names of the specification fields must still be present at the start of lines, with comma-separated translations appended in brackets: For example, "Location (Standort, Indawo): ..."
 
-Package specifications can be written in a language other than English, however the English names of the specification fields must still be present at the start of lines, with comma-separated translations appended in brackets: For example, "Location (Standort, Indawo): ..."
+(b), A blank line should follow the above package version specification, followed by a four-space-indented and blank-line-separated concatenation of the source trees of each of the package version's DevWheels-licensed direct-derivation-sources, if any, in the form that each tree existed when that source last influenced the package version. A package version cannot be used as a DevWheels-licensed derivation-source if that version of that package has been withdrawn with substitute, as stated in (a) above. The "Location" link of all DevWheels-licensed derivation-sources must be visited to verify that none have been so withdrawn.
 
-
-D. REDISTRIBUTION IN A NEW FORM
-   ============================
+  A source tree can contain package specifications with prefixes other than "DEVWHEELS-" that relate to source works not subject to a version of this licence. These specifications are ignored for the purposes of licensing under this licence.
   
-You may redistribute a modified or re-packaged version of material that has been released under this licence (with or without compatible extra conditions), under the following conditions:
+  Each uniquely-named package version specification in the concatenated document, including the specification of the package version for which this source tree is being compiled, should appear at most once with its unique name prefixed with the label "DEVWHEELS-PACKAGE" rather than "DEVWHEELS-DUP-PACKAGE". If this is not the case after the concatenation operation:
 
-1. The package of material that you distribute must also be licensed under this, or a later version, of this licence (with or without extra licence conditions that do not conflict with this licence), unless the copyright holders of the material have agreed for you to release the material under a different licence.
+  (i), "DUP-" should be inserted into the labels of all package version specifications with the same unique name, with the exception of one specification among those with the same unique name that has the highest naturally-ordered version-ID, and
+
+  (ii), For each non-zero-fee use-case of each package version specification for which "DUP-" has been so inserted, the package version specifications in the derivation chain above that package version, for which that package version specification has not itself had "DUP-" inserted into its label, and excepting for now the top package version specification for which this source tree is being compiled, must have each of their licence fees for use-cases that are subsets of this non-zero-fee duplicate use-case altered to first replace the fee with "<original-fee> (NET <original-fee>)" if the bracketed net pricing is not present, then subtracting from that net fee the net fee, or, if there is no net pricing, the original fee, from the duplicate use-case.
+    
+  A field of a package version specification in the resulting source tree can be changed by agreement with the holders of the licensing rights for that package version, annotated with "(AS AGREED)".
   
-2. You do not make any substantive subtractions from existing copyright notices.
-
-3. If the preferred way of making changes to the work is by building it from changed source material, that source material and a non-restricted way to build the work must accompany all distributions of the work, with the exception of information that securely identifies a vendor to a licensing system.
- 
-4. The package you release contains a "sources.txt" file, or "Sources" Section, of the following form:
+  Other than a variation by quantity or licence period, a version of a package, and all that version's non-duplicate DevWheels-licensed derivation-sources in the source tree of that package version, must have the same unit-of-use, so that each use of that package version results in a fixed number of indirect uses (possibly zero for some use-cases) of each of these sources, and hence in a fixed number of licences as specified in Term E2 below. Agreements can be reached to change the unit-of-use of a derivation-source of a package version, as stated in the source tree of that package version, to make them compatible.
   
-  At the top of the document is the specification of the package to be released, as described in Part C of this licence, followed by a blank line. Following this is a four-space-indented and blank-line-separated concatenation of the "sources.txt" files or "Sources" sections of all works under a version of this licence on which the new work has directly drawn (the "direct-sources"), in the form that each document existed when material from that work was last drawn from. A field of a package specification in the resulting document can be changed by agreement with the copyright holders of that package.
+  Each use-case of a non-duplicate package version in a source tree must map to either a zero-fee use-case or a subset of a non-zero-fee use-case in each of that package version's non-duplicate DevWheels-licensed derivation-sources, ensuring that the licence fees that must be forwarded to those sources are identical for all licensees in each use-case. This allows a single fee to be set for each use-case. Agreements can be reached to change the use-cases of a package version's derivation-sources, as described in that package version's source tree, to make them compatible.
   
-  Each uniquely-named package specification in the concatenated document should appear at most once with its unique name prefixed with "PACKAGE" rather than "DUP PACKAGE". If this is not the case after the concatenation operation:
-  (a) A "DUP" prefix should be added to all package specifications of the same unique name, with the exception of one with the highest naturally-ordered version ID,
-  (b) If a "DUP" prefix is added to a specification of the package for which this "sources.txt" is being compiled, all package specifications below this self-duplicate should be removed from the file, and 
-  (c) The specifications of direct-source packages for which a "DUP" prefix has been added to a package specification that originated from that source must be altered by
-    (i) Adding, if not already present, a "Net Excluded" field (above "Licensing Conditions"), to which the unique names of the packages to which the "DUP" prefix has been added should be added to a space-separated list, and  
-    (ii) Each licence fee in the "License Conditions" field is altered to first replace the fee with "<original-fee> (NET <original-fee>)" if the bracketed net pricing is not present, then, for each currency in this fee, and for each package to which a "DUP" has been added, subtracting from the net fee the equivalent net fee from the same or super-set use-case of that package,
+  Further agreements are possible: licensing fees could be reduced when a package version is only a partial derivation-source, or if a package version has a substantial overlap with another source package version, but this overlap is missed by the above duplicate identification procedure because of a change in the package's unique name.
   
-5. Within 40 days of receiving a licence fee for a particular version of your redistributed package, you pay, as specified in the associated "Payment Information" fields, either
-   (i) For initial purchases of a package licence: The net fees as listed for the licensee's use-case in the "Licensing Conditions" fields of each direct-source package specification in the "sources.txt" file or "Sources" Section of the package version that has been licensed. 
-   (ii) For the purchase of an upgrade from a previously-licensed version: The difference between the net fees as described in (i) for the newly-licensed version and those given for the the previously-licensed version, as long as this difference is positive.
-     
-  If you do not have enough information to determine a licensee's use-case as described by the specification of a direct-source, you will request this information from the licensee. If an attempt to pay a direct-source is unsuccessful, you will hold that amount in trust until payment is successful, making regular attempts to both pay what is owning and to contact the source to inform them of your payment failure.
+  The affect of any agreed change in a use-case of a package version on that use-case's net fees should be propagated to package versions above this in the derivation chain using the same procedure as described in (ii) above for fee adjustments caused by duplicate package versions.
   
-6. If 60 days after receiving a licence fee you are unable to make the required payment to a source, you will instead pay any direct-sources of this source the required licence fees as specified in Point 4, retaining in trust any remaining fee, and again applying this Point 5 if a payment is unsuccessful.
+  Once the final units-of-use, use-cases, and licence fees are known for the non-duplicate DevWheels-licensed direct-derivation-sources of the package version for which this source tree is being compiled, the same information for the top package specification of the package version can be set with knowledge of the fees that must be forwarded to each of these sources whenever a use of this package version is licensed, as described in Terms E2 and E3.
+  
+  A source tree for a package version cannot be changed once you allow potential-licensees access to that source tree, other than adding or removing the line described in (a) above that withdraws this package version. An altered source tree must instead be re-issued with a different version-ID.
 
+  There is no requirement to agree to a request from a DevWheels-licensed derivation-source of a package version that you manage to perform such a version withdrawal and re-issue so as to alter one or more fields in the specification of that derivation-source in the source tree of your package version. However you should generously consider infrequent requests for adjustments to use-case fees due to either inflation or currency movements, or adjustments to other fields imposed by third-parties.
+  
+2. Within either 40 days or an agreed other schedule of either (a), receiving, from either a licensee or the managers of a package version of which a version of your package is a derivation-source, a licence fee for a particular use (including a change in use-case) of this version of your package, or (b), a non-evaluation-use being made of package version for which you hold the licensing rights, you must determine whether you must purchase, on behalf of the user, a licence from each DevWheels-licensed direct-derivation-source of this version of your package, as listed as the non-duplicate package specifications indented one level below the non-duplicate specification of your package in the source tree of the package version that is being used.
 
-E. CERTAIN ASSOCIATED WORKS OF SOFTWARE ARE NOT DERIVED WORKS
-   ==========================================================  
+   The licence you are required to buy for a DevWheels-licensed direct-derivation-source of your package version will be an upgrade licence if both (a), the licence payment you have received is an upgrade payment for a change in this use of your package to a version of your package with a higher version-ID, and (b), a version of that direct-derivation-source package is also a direct-derivation-source of your package in the source tree of the package version that was previously-licensed by the licensee. This upgrade will be from the version of that direct-derivation-source package in the source tree of the package version that was previously-licensed by the licensee to the version of that direct-derivation-source package in the source tree of the package version that has been newly-licensed by the licensee. Unless a different method for calculating version change fees has been specified in the licensing conditions of that direct-derivation-source in the source tree of the package version that has been newly-licensed by the licensee, the fee owed is the difference between the net fees as stated for the licensee's use-case in the licensing conditions of that direct-derivation-source in the source trees of the newly-licensed and previously-licensed versions of the package that has been licensed by the licensee for this use, in one of the listed currencies, with no fee owed if this difference is not positive.
+   
+    Otherwise, if the licence you must buy for a direct-derivation-source is not an upgrade, the licence fee you owe to that direct-derivation-source is the net fee as listed for the licensee's use-case, or for a change in use-case, the difference between the net fees for the use-cases, if positive, in the licensing conditions of that direct-derivation-source in the source tree of the package version that has been newly-licensed by the licensee, in one of the listed currencies.
+    
+    If you hold the licensing rights to a package version which is a DevWheels-licensed direct-derivation-source that is owed a fee via the procedure given above, you will act as though you received that fee to license that package version, subsequently paying fees to any non-duplicate DevWheels-licensed direct-derivation-sources of your package version.
 
-A work of software is not a derived work of a DevWheels-licensed work if all the work does is make and receive calls to and from the DevWheels-licensed work that is acting as a separate library, module, or module host, including when parts of the DevWheels-licensed work must be present to build the software.
+  You must inform the managers of any package version to which you forward a fee, via either the payment mechanism or the "Licensing Contact" information of that package version, (a), the unique name of the package whose managers are owed the payment you have sent, (b), the source tree of the package version correspondingly newly-licensed by the licensee, (c), the number of the use-case of the licensee in the specification at the top of that source tree (if there is more than one such use-case), (d), the licence period (if not perpetual), both for the licensee and for this forwarding, (e), the quantity of licences for this period being purchased, both by the licensee and by yourself in this forwarding, and (f), for upgrades, the source tree of the package version from which the licensee has upgraded. Source trees can be supplied either as a copy or a link. If source trees are provided through an earlier communication, the associated package names and versions must be provided at time of payment. Due to duplicate identification, this information together uniquely identifies the payments that the recipient must forward.
+   
+   If an attempt to pay a direct-derivation-source is unsuccessful, you are required to make regular attempts to both pay what is owed and make contact with the managers of that source to inform them of your payment failure.
+   
+   Unless a licence to your package version has been directly purchased by a licensee for a use, you are not required to either allow the licensee to make that use of that package version, issue a licence text to the licensee (in the format specified in Term E4), or transfer such an issued licence to another use, either substituting for or in addition to use of the directly-licensed package version, although such services can be offered.
 
-Nor is a collection of source code a derived work of a DevWheels-licensed work if that source code is designed to call code or access data of that work by using its names and signatures, whether or not those names and signatures are part of a defined interface, but includes no source or built code from that work.
+3. If 60 days after receiving a licence fee your attempts to make a required payment to a DevWheels-licensed direct-derivation-source have been unsuccessful, you will instead pay any non-duplicate DevWheels-licensed direct-derivation-sources of this source (indented a further level in the source tree of the package version that has been newly-licensed by the licensee) the required licence fees as specified in Term E2, retaining any remaining fee, and again applying this Term E3 if a payment is unsuccessful.
 
-Nor is a work that re-implements all or part of a software interface defined by a DevWheels-licensed work a derived work.
+4. Once you have received payment from a licensee for a direct use of your package version, where you are able to associate this payment with a means of contacting that licensee, on request of that licensee you must issue the licensee with a text version of that licence in the following form:
+
+   DEVWHEELS-LICENCE
+   Package: <unique-package-name>
+   Package Version: <licensed-version-ID>
+   Use ID: <unique-ID-for-this-use>
+   Licence Quantity: <number-of-licences>
+   Licence Issued: <YYYY-MM-DD>
+   Licence Expires: <YYYY-MM-DD or "never">
+   Licensor's Signature: <digital-signature-of-licensor>
+   
+   "Use ID" is an identifier, chosen by the managers of the package that has been directly licensed by the licensee to be unique over all uses of that package, prefixed with the unique name of the package for which this licence is being issued, followed by a "." character.
+
+   The "Licensor's Signature" field is a digital signature that you choose to allow you to determine the authenticity of a licence text with near-perfect accuracy.
+   
+   On either a request by the current licensee or the presentation of a licence text by its owner, a license to a package version that has been directly licensed by a licensee must be transferred to either a different use by that licensee or a use by a specified new licensee once you are satisfied that the original licensee will no longer make their current use of that package version, with the exception that a licensor can either refuse to perform a transfer to a different use-case, or assign such licences a value.
+
+   
+F. OBLIGATIONS WHEN RELEASING A WORK TO THE PUBLIC
+   ===============================================
+   
+A version of a work subject to this licence has been "released" when that version of the work has been made available for use by some or all of the public.
+
+If you release a package of material that is subject to this licence, then prior to that release you must make publicly and indefinitely available through the "Location" link of this version of the work, as described in Term E1(a), at a price no more than a small premium on the cost of delivery, a preferred means by which derivative works of the entire material as released can be created and subsequently used for unlimited evaluation-use as defined in Term B1, as well as information on an accessible way of doing so.
+

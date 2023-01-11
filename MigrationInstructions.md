@@ -60,7 +60,7 @@
 
    The `initialized` event will fire on the `applet`/`object` element when its Java `init()` method has returned, allowing you to delay work until this has occurred.
 
-   Because the extension has to check URL prefixes, it is not guaranteed to be active when the `document.DOMContentLoaded` or `window.load` events fire, or when inline JavaScript is executed. `getElementById` calls on Applets will return normal `HTMLElement`s rather than Java proxies before the `window.jsjbridgeActive` event fires, so instantiation of these should wait until then:
+   However, because the extension has to check URL prefixes, it is not guaranteed to be active when the `document.DOMContentLoaded` or `window.load` events fire, or when inline JavaScript is executed. `getElementById` calls on Applets will return normal `HTMLElement`s rather than Java proxies before the `window.jsjbridgeActive` event fires, so instantiation of these should wait until then:
 
    ```javascript
    addEventListener('jsjbridgeActive', function() {
@@ -178,7 +178,7 @@
   
 7. Expression Chains
 
-Java can be called in an expression chain, which will return a Promise that resolves when the a value is available for the chain.
+Java can be called in an expression chain, which will return a Promise that resolves when the  value is available for the chain.
 
 However, while JSJBridge knows whether the first property in a call chain on a Java Object is a field or a method, it cannot know the same for later properties in the chain before that result is available (unless JSJBridge pre-cached information on methods and fields in all Java classes that each program has included, which is not currently done).
 

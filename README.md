@@ -1,6 +1,6 @@
 # JavaScript-Java Bridge (JSJBridge)
 
-A web browser is a good user interface for a native application. The Java browser Plugin provided an easy way for Java programs, configured as Applets, to manipulate webpages, and for the webpages to both get and set Java fields and call Java methods via the [LiveConnect API](https://www.oracle.com/technetwork/java/javase/overview/liveconnect-docs-349790.html). This was in addition to the ability of Applets to display their graphics in a rectangle on their webpages.
+A web browser is a good user interface for a native application. The Java browser Plugin provided an easy way for Java programs, configured as Applets, to manipulate webpages, and for the webpages to both get and set Java fields and call Java methods via the [LiveConnect API](https://www.oracle.com/java/technologies/javase/liveconnect-docs.html). This was in addition to the ability of Applets to display their graphics in a rectangle on their webpages.
 
 However both the Java Plugin and Applets are now being deprecated as security and browser-stability risks. Continued use of them requires use of an older browser version, and soon an older Java version.
 
